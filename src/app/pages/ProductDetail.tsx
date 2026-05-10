@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Nav } from '../components/layout/Nav'
 import { useLanguage } from '../hooks/useLanguage'
+import { useIsMobile } from '../hooks/useIsMobile'
 import { useProductByCode } from '../hooks/useCatalogue'
 import { ROUTES } from '../constants'
 import type { Availability, ProductBadge } from '../types'
@@ -34,21 +35,24 @@ function Photo({ image, label, ratio = '4 / 3' }: { image?: string; label: strin
 }
 
 const BADGE_STYLES: Record<ProductBadge, { label: { fr: string; en: string }; bg: string; color: string }> = {
-  export:  { label: { fr: 'Export',   en: 'Export'   }, bg: '#0F3D14', color: '#fff'     },
-  premium: { label: { fr: 'Premium',  en: 'Premium'  }, bg: '#7C5200', color: '#fff'     },
-  new:     { label: { fr: 'Nouveau',  en: 'New'      }, bg: '#C0392B', color: '#fff'     },
+  export:  { label: { fr: 'Export',   en: 'Export'   }, bg: '#0F3D14', color: '#fff' },
+  premium: { label: { fr: 'Premium',  en: 'Premium'  }, bg: '#7C5200', color: '#fff' },
+  new:     { label: { fr: 'Nouveau',  en: 'New'      }, bg: '#C0392B', color: '#fff' },
 }
 
 const AVAIL_STYLES: Record<Availability, { label: { fr: string; en: string }; dot: string }> = {
-  'available':  { label: { fr: 'Disponible',    en: 'Available'   }, dot: '#22C55E' },
-  'on-request': { label: { fr: 'Sur demande',   en: 'On request'  }, dot: '#F59E0B' },
-  'to-confirm': { label: { fr: 'À confirmer',   en: 'To confirm'  }, dot: '#9CA3AF' },
+  'available':  { label: { fr: 'Disponible',  en: 'Available'  }, dot: '#22C55E' },
+  'on-request': { label: { fr: 'Sur demande', en: 'On request' }, dot: '#F59E0B' },
+  'to-confirm': { label: { fr: 'À confirmer', en: 'To confirm' }, dot: '#9CA3AF' },
 }
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>()
   const { t, language } = useLanguage()
   const { product, dept, loading } = useProductByCode(id ?? '')
+  const isMobile = useIsMobile()
+
+  const px = isMobile ? 20 : 64
 
   if (loading) {
     return (
@@ -80,10 +84,9 @@ export default function ProductDetail() {
   const photoLabel  = language === 'fr' ? (product.photoAltFr ?? '') : (product.photoAltEn ?? '')
   const deptName    = language === 'fr' ? dept.nameFr : dept.nameEn
 
-  const badge     = product.badge     ? BADGE_STYLES[product.badge]     : null
-  const availInfo = product.availability ? AVAIL_STYLES[product.availability] : null
+  const badge     = product.badge        ? BADGE_STYLES[product.badge]           : null
+  const availInfo = product.availability ? AVAIL_STYLES[product.availability]    : null
 
-  // Packaging spec rows — only show rows that have data
   const specRows: { label: string; value: string }[] = []
   if (product.packagingTonnes)     specRows.push({ label: t('Par conteneur (tonnes)', 'Per container (tonnes)'), value: product.packagingTonnes })
   if (product.packagingPalettes)   specRows.push({ label: t('Palettes / conteneur', 'Pallets / container'),      value: product.packagingPalettes })
@@ -97,8 +100,8 @@ export default function ProductDetail() {
     <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
       <Nav />
 
-      {/* Breadcrumb sub-hero */}
-      <section style={{ padding: '180px 64px 56px', borderBottom: '1px solid #E5E7EB' }}>
+      {/* Breadcrumb */}
+      <section style={{ padding: `${isMobile ? 100 : 180}px ${px}px ${isMobile ? 32 : 56}px`, borderBottom: '1px solid #E5E7EB' }}>
         <Link
           to={ROUTES.PRODUCTS}
           className="fg-mono"
@@ -109,12 +112,11 @@ export default function ProductDetail() {
         <div className="fg-eyebrow" style={{ marginTop: 16 }}>↗ {dept.code} · {deptName}</div>
       </section>
 
-      {/* 50/50 main */}
-      <section style={{ padding: '120px 64px', borderBottom: '1px solid #E5E7EB' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 80, alignItems: 'start' }}>
+      {/* Main product section */}
+      <section style={{ padding: `${isMobile ? 48 : 120}px ${px}px`, borderBottom: '1px solid #E5E7EB' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.1fr 1fr', gap: isMobile ? 32 : 80, alignItems: 'start' }}>
           <Photo image={product.image} label={photoLabel} ratio="4 / 3" />
           <div>
-            {/* Badge + availability row */}
             {(badge || availInfo) && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
                 {badge && (
@@ -134,19 +136,17 @@ export default function ProductDetail() {
             <span className="fg-mono" style={{ fontSize: 11, color: '#6B7280', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
               {t('Référence', 'Reference')} · {product.code}
             </span>
-            <h1 className="fg-fr" style={{ fontSize: 'clamp(40px, 5vw, 76px)', margin: '14px 0 24px', fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
+            <h1 className="fg-fr" style={{ fontSize: 'clamp(36px, 5vw, 76px)', margin: '14px 0 24px', fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
               {name}
             </h1>
             <p style={{ fontSize: 16, lineHeight: 1.6, color: '#6B7280', margin: '0 0 28px', maxWidth: 480 }}>{ref}.</p>
 
-            {/* Description */}
             {description && (
               <p style={{ fontSize: 15, lineHeight: 1.7, color: '#374151', margin: '0 0 28px', maxWidth: 480 }}>
                 {description}
               </p>
             )}
 
-            {/* Formats */}
             {product.formats && product.formats.length > 0 && (
               <div style={{ marginBottom: 28 }}>
                 <span className="fg-mono" style={{ fontSize: 10, color: '#6B7280', letterSpacing: '0.14em', textTransform: 'uppercase', display: 'block', marginBottom: 10 }}>
@@ -162,7 +162,6 @@ export default function ProductDetail() {
               </div>
             )}
 
-            {/* Quick specs grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', borderTop: '1px solid #E5E7EB', marginBottom: 32 }}>
               {[
                 [t('Origine', 'Origin'), language === 'fr' ? 'Multi-origine' : 'Multi-origin'],
@@ -183,18 +182,18 @@ export default function ProductDetail() {
         </div>
       </section>
 
-      {/* Spec table — only rendered if there is real data */}
+      {/* Spec table */}
       {specRows.length > 0 && (
-        <section style={{ padding: '120px 64px', background: '#fff', borderBottom: '1px solid #E5E7EB' }}>
-          <div style={{ marginBottom: 56 }}>
-            <h2 className="fg-fr" style={{ fontSize: 64, margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
+        <section style={{ padding: `${isMobile ? 48 : 120}px ${px}px`, background: '#fff', borderBottom: '1px solid #E5E7EB' }}>
+          <div style={{ marginBottom: isMobile ? 32 : 56 }}>
+            <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 6vw, 64px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
               {t('Spécifications', 'Technical')}{' '}
               <span style={{ fontStyle: 'italic', color: '#6B7280' }}>{t('techniques.', 'specifications.')}</span>
             </h2>
           </div>
           <div style={{ borderTop: '1px solid #E5E7EB' }}>
             {specRows.map((row, i) => (
-              <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', padding: '24px 0', borderBottom: '1px solid #E5E7EB', gap: 24 }}>
+              <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 2fr', padding: '24px 0', borderBottom: '1px solid #E5E7EB', gap: isMobile ? 6 : 24 }}>
                 <div className="fg-mono" style={{ fontSize: 11, color: '#6B7280', letterSpacing: '0.12em', textTransform: 'uppercase', alignSelf: 'center' }}>{row.label}</div>
                 <div style={{ fontSize: 16, color: '#1A1A1A', fontWeight: 400 }}>{row.value}</div>
               </div>
@@ -204,14 +203,14 @@ export default function ProductDetail() {
       )}
 
       {/* Related products */}
-      <section style={{ padding: '120px 64px', borderBottom: '1px solid #E5E7EB' }}>
-        <div style={{ marginBottom: 56 }}>
-          <h2 className="fg-fr" style={{ fontSize: 64, margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
+      <section style={{ padding: `${isMobile ? 48 : 120}px ${px}px`, borderBottom: '1px solid #E5E7EB' }}>
+        <div style={{ marginBottom: isMobile ? 32 : 56 }}>
+          <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 6vw, 64px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
             {t('Autres références', 'Other references')}{' '}
             <span style={{ fontStyle: 'italic', color: '#6B7280' }}>{t('du département.', 'in this department.')}</span>
           </h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: isMobile ? 14 : 24 }}>
           {related.map((p) => (
             <Link
               key={p.code}
@@ -222,18 +221,18 @@ export default function ProductDetail() {
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = 'none' }}
             >
               <Photo label={language === 'fr' ? (p.photoAltFr ?? '') : (p.photoAltEn ?? '')} image={p.image} ratio="4 / 3" />
-              <div style={{ padding: '20px 22px 22px' }}>
+              <div style={{ padding: isMobile ? '14px 14px 16px' : '20px 22px 22px' }}>
                 <span className="fg-mono" style={{ fontSize: 10, color: '#6B7280', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{p.code}</span>
-                <h3 className="fg-fr" style={{ fontSize: 24, margin: '8px 0 6px', fontWeight: 500, letterSpacing: '-0.025em', lineHeight: 1.05 }}>
+                <h3 className="fg-fr" style={{ fontSize: isMobile ? 18 : 24, margin: '8px 0 6px', fontWeight: 500, letterSpacing: '-0.025em', lineHeight: 1.05 }}>
                   {language === 'fr' ? p.nameFr : p.nameEn}
                 </h3>
-                <p style={{ fontSize: 13, color: '#6B7280', margin: 0, lineHeight: 1.5 }}>
+                <p style={{ fontSize: 12, color: '#6B7280', margin: 0, lineHeight: 1.5 }}>
                   {language === 'fr' ? p.refFr : p.refEn}
                 </p>
               </div>
             </Link>
           ))}
-          {related.length < 3 && Array.from({ length: 3 - related.length }).map((_, i) => (
+          {related.length < 3 && !isMobile && Array.from({ length: 3 - related.length }).map((_, i) => (
             <div key={'ph' + i} style={{ border: '1px dashed #E5E7EB', borderRadius: 10, padding: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span className="fg-mono" style={{ fontSize: 10, color: '#6B7280', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
                 {language === 'fr' ? 'autres références → voir catalogue' : 'more references → see catalogue'}
@@ -242,16 +241,6 @@ export default function ProductDetail() {
           ))}
         </div>
       </section>
-
-      <style>{`
-        @media (max-width: 768px) {
-          #detail-main { grid-template-columns: 1fr !important; gap: 32px !important; padding: 64px 24px !important; }
-          #detail-specs { padding: 64px 24px !important; }
-          #detail-specs h2 { font-size: 40px !important; }
-          #detail-related { padding: 64px 24px !important; grid-template-columns: 1fr !important; }
-          #detail-related h2 { font-size: 40px !important; }
-        }
-      `}</style>
     </div>
   )
 }
