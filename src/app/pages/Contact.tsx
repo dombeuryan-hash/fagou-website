@@ -8,6 +8,7 @@ import { useCatalogue } from '../hooks/useCatalogue'
 import { CONTACT, INCOTERMS } from '../data/departmentsData'
 
 const SUBMIT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-contact`
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as string
 
 type FormState = {
@@ -55,7 +56,7 @@ export default function Contact() {
     setSubmitting(true)
     const res = await fetch(SUBMIT_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
       body: JSON.stringify({
         turnstileToken: captchaToken,
         name: form.company,
