@@ -54,28 +54,36 @@ export default function Contact() {
     }
     setError('')
     setSubmitting(true)
-    const res = await fetch(SUBMIT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-      body: JSON.stringify({
-        turnstileToken: captchaToken,
-        name: form.company,
-        country: form.country,
-        email: form.email,
-        phone: form.phone || null,
-        interests: Object.keys(form.interests).filter((k) => form.interests[k]),
-        volume: form.volume,
-        incoterm: form.incoterm,
-        message: form.message || null,
-      }),
-    })
-    setSubmitting(false)
-    turnstileRef.current?.reset()
-    setCaptchaToken(null)
-    if (!res.ok) {
+    try {
+      const res = await fetch(SUBMIT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+        body: JSON.stringify({
+          turnstileToken: captchaToken,
+          name: form.company,
+          country: form.country,
+          email: form.email,
+          phone: form.phone || null,
+          interests: Object.keys(form.interests).filter((k) => form.interests[k]),
+          volume: form.volume,
+          incoterm: form.incoterm,
+          message: form.message || null,
+        }),
+      })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        console.error('submit-contact error:', res.status, body)
+        setError(t('Une erreur est survenue. Veuillez réessayer.', 'An error occurred. Please try again.'))
+      } else {
+        setSent(true)
+      }
+    } catch (err) {
+      console.error('submit-contact fetch failed:', err)
       setError(t('Une erreur est survenue. Veuillez réessayer.', 'An error occurred. Please try again.'))
-    } else {
-      setSent(true)
+    } finally {
+      setSubmitting(false)
+      turnstileRef.current?.reset()
+      setCaptchaToken(null)
     }
   }
 
