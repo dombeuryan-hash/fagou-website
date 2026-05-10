@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Nav } from '../components/layout/Nav'
 import { useLanguage } from '../hooks/useLanguage'
+import { useIsMobile } from '../hooks/useIsMobile'
 import { useSiteSettings } from '../hooks/useSiteSettings'
 import { ROUTES } from '../constants'
 
@@ -91,54 +92,37 @@ function Photo({ image, label }: { image?: string; label: string }) {
 export default function ColdStorage() {
   const { t, language } = useLanguage()
   const { settings } = useSiteSettings()
+  const isMobile = useIsMobile()
   const rooms = ROOMS[language]
   const heroImage = settings['coldstorage_hero'] || undefined
 
   const stats = [
-    {
-      value: '3 100',
-      unit: 't',
-      label: t('Capacité totale', 'Total capacity'),
-      sub: t('Réf. FTT & GM', 'Ref. FTT & GM'),
-    },
-    {
-      value: '−24',
-      unit: '°C',
-      label: t('Surgélation', 'Deep freeze'),
-      sub: language === 'fr' ? 'zone A · 2 200 m³' : 'zone A · 2,200 m³',
-    },
-    {
-      value: '2 927',
-      unit: 'm²',
-      label: t('Panneaux LA180', 'LA180 panels'),
-      sub: t('Polyuréthane 180 mm', 'Polyurethane 180 mm'),
-    },
-    {
-      value: '24/7',
-      unit: '',
-      label: 'Monitoring',
-      sub: t('Groupe électrogène 100 %', '100 % backup genset'),
-    },
+    { value: '3 100', unit: 't', label: t('Capacité totale', 'Total capacity'), sub: t('Réf. FTT & GM', 'Ref. FTT & GM') },
+    { value: '−24', unit: '°C', label: t('Surgélation', 'Deep freeze'), sub: language === 'fr' ? 'zone A · 2 200 m³' : 'zone A · 2,200 m³' },
+    { value: '2 927', unit: 'm²', label: t('Panneaux LA180', 'LA180 panels'), sub: t('Polyuréthane 180 mm', 'Polyurethane 180 mm') },
+    { value: '24/7', unit: '', label: 'Monitoring', sub: t('Groupe électrogène 100 %', '100 % backup genset') },
   ]
+
+  const px = isMobile ? 20 : 64
 
   return (
     <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
       <Nav />
 
-      {/* ── Hero ─────────────────────────────────────────────────── */}
-      <section style={{ padding: '180px 64px 88px', borderBottom: '1px solid #E5E7EB' }}>
+      {/* ── Hero ── */}
+      <section style={{ padding: `${isMobile ? 100 : 180}px ${px}px ${isMobile ? 56 : 88}px`, borderBottom: '1px solid #E5E7EB' }}>
         <div className="fg-eyebrow" style={{ marginBottom: 40 }}>
           ↗ 03 / 06 · {t('Chambre froide · équipée par FAGOU', 'Cold storage · equipped by FAGOU')}
         </div>
         <h1
           className="fg-fr"
-          style={{ fontSize: 'clamp(56px, 9vw, 132px)', margin: 0, fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 0.92 }}
+          style={{ fontSize: 'clamp(48px, 9vw, 132px)', margin: 0, fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 0.92 }}
         >
           {t('Chambre', 'Cold')}{' '}
           <span style={{ fontStyle: 'italic', color: '#6B7280' }}>{t('froide,', 'storage,')}</span>{' '}
           {t('au Congo.', 'in Congo.')}
         </h1>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 64, marginTop: 56, alignItems: 'end' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.4fr 1fr', gap: isMobile ? 32 : 64, marginTop: isMobile ? 32 : 56, alignItems: 'end' }}>
           <p style={{ fontSize: 17, lineHeight: 1.6, color: '#6B7280', margin: 0, maxWidth: 600 }}>
             {t(
               "FAGOU a fourni et installé cette chambre froide industrielle au Congo pour LCC. Équipée avec des panneaux LA180 haute performance, elle garantit la chaîne du froid de −24 °C à l'ambiante pour tous les produits d'import-export.",
@@ -159,29 +143,30 @@ export default function ColdStorage() {
         </div>
       </section>
 
-      {/* ── Photo principale ─────────────────────────────────────── */}
-      <Photo
-        image={heroImage}
-        label={t('chambre froide · lcc congo · allée principale', 'cold storage · lcc congo · main aisle')}
-      />
+      {/* ── Photo principale ── */}
+      <Photo image={heroImage} label={t('chambre froide · lcc congo · allée principale', 'cold storage · lcc congo · main aisle')} />
 
-      {/* ── Stats ────────────────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
+      {/* ── Stats ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
         {stats.map((s, i) => (
-          <div key={i} style={{ padding: '40px 36px', borderRight: i < 3 ? '1px solid #E5E7EB' : 'none' }}>
-            <div className="fg-fr" style={{ fontSize: 'clamp(32px, 4vw, 60px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1, color: '#1A1A1A' }}>
+          <div key={i} style={{
+            padding: isMobile ? '28px 16px' : '40px 36px',
+            borderRight: isMobile ? (i % 2 === 0 ? '1px solid #E5E7EB' : 'none') : (i < 3 ? '1px solid #E5E7EB' : 'none'),
+            borderBottom: isMobile && i < 2 ? '1px solid #E5E7EB' : 'none',
+          }}>
+            <div className="fg-fr" style={{ fontSize: 'clamp(28px, 4vw, 60px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1, color: '#1A1A1A' }}>
               {s.value}
               {s.unit && <span style={{ fontSize: '0.45em', letterSpacing: '-0.02em', marginLeft: 4, color: '#6B7280' }}>{s.unit}</span>}
             </div>
-            <div style={{ fontSize: 14, color: '#1A1A1A', marginTop: 12, fontWeight: 500 }}>{s.label}</div>
+            <div style={{ fontSize: 13, color: '#1A1A1A', marginTop: 10, fontWeight: 500 }}>{s.label}</div>
             <div className="fg-mono" style={{ fontSize: 10, color: '#6B7280', marginTop: 6, letterSpacing: '0.12em', textTransform: 'uppercase' }}>{s.sub}</div>
           </div>
         ))}
       </div>
 
-      {/* ── Trois chambres ───────────────────────────────────────── */}
-      <section style={{ padding: '120px 64px', borderBottom: '1px solid #E5E7EB' }}>
-        <div style={{ marginBottom: 64 }}>
+      {/* ── Trois chambres ── */}
+      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, borderBottom: '1px solid #E5E7EB' }}>
+        <div style={{ marginBottom: isMobile ? 40 : 64 }}>
           <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Les chambres', 'The rooms')}</div>
           <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 4vw, 64px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
             {t('Trois zones,', 'Three zones,')}{' '}
@@ -189,14 +174,16 @@ export default function ColdStorage() {
           </h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0, borderTop: '1px solid #E5E7EB' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 0, borderTop: '1px solid #E5E7EB' }}>
           {rooms.map((room, i) => (
             <div
               key={room.code}
               style={{
-                padding: '48px 36px 48px 0',
-                borderRight: i < 2 ? '1px solid #E5E7EB' : 'none',
-                paddingLeft: i > 0 ? 36 : 0,
+                padding: `48px 0 48px`,
+                paddingRight: !isMobile && i < 2 ? 36 : 0,
+                paddingLeft: !isMobile && i > 0 ? 36 : 0,
+                borderRight: !isMobile && i < 2 ? '1px solid #E5E7EB' : 'none',
+                borderBottom: isMobile && i < 2 ? '1px solid #E5E7EB' : 'none',
               }}
             >
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
@@ -214,7 +201,7 @@ export default function ColdStorage() {
                 </div>
               </div>
 
-              <div className="fg-fr" style={{ fontSize: 'clamp(36px, 3vw, 56px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1, color: '#1A1A1A', marginBottom: 20 }}>
+              <div className="fg-fr" style={{ fontSize: 'clamp(32px, 3vw, 56px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1, color: '#1A1A1A', marginBottom: 20 }}>
                 {room.temp}
               </div>
 
@@ -243,9 +230,9 @@ export default function ColdStorage() {
         </div>
       </section>
 
-      {/* ── Fiche technique ──────────────────────────────────────── */}
-      <section style={{ padding: '120px 64px', borderBottom: '1px solid #E5E7EB', backgroundColor: '#fff' }}>
-        <div style={{ marginBottom: 64 }}>
+      {/* ── Fiche technique ── */}
+      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, borderBottom: '1px solid #E5E7EB', backgroundColor: '#fff' }}>
+        <div style={{ marginBottom: isMobile ? 40 : 64 }}>
           <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Fiche technique', 'Technical specs')}</div>
           <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 4vw, 64px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
             {t('Équipé par', 'Equipped by')}{' '}
@@ -265,11 +252,11 @@ export default function ColdStorage() {
               key={i}
               style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr 2fr',
-                gap: 32,
+                gridTemplateColumns: isMobile ? '1fr' : '1fr 2fr',
+                gap: isMobile ? 6 : 32,
                 padding: '20px 0',
                 borderBottom: '1px solid #E5E7EB',
-                alignItems: 'center',
+                alignItems: isMobile ? 'start' : 'center',
               }}
             >
               <div className="fg-mono" style={{ fontSize: 10, color: '#6B7280', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
@@ -281,40 +268,24 @@ export default function ColdStorage() {
         </div>
       </section>
 
-      {/* ── Certifications + LCC ─────────────────────────────────── */}
-      <section style={{ padding: '120px 64px', borderBottom: '1px solid #E5E7EB' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
-
-          {/* Certifications */}
+      {/* ── Certifications + LCC ── */}
+      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, borderBottom: '1px solid #E5E7EB' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 48 : 80, alignItems: 'start' }}>
           <div>
             <div className="fg-eyebrow" style={{ marginBottom: 40 }}>↗ {t('Normes & certifications', 'Standards & certifications')}</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
               {CERTS.map((cert) => (
-                <div
-                  key={cert}
-                  style={{ border: '1px solid #E5E7EB', borderRadius: 8, padding: '20px 28px', background: '#fff' }}
-                >
+                <div key={cert} style={{ border: '1px solid #E5E7EB', borderRadius: 8, padding: '20px 28px', background: '#fff' }}>
                   <div className="fg-mono" style={{ fontSize: 13, fontWeight: 500, letterSpacing: '0.06em', color: '#1A5C1A' }}>{cert}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* LCC + adresse + CTA */}
           <div>
             <div className="fg-eyebrow" style={{ marginBottom: 24 }}>↗ {t('Opérateur', 'Operator')}</div>
-
-            {/* LCC card */}
-            <div style={{
-              border: '1px solid #E5E7EB',
-              borderRadius: 10,
-              padding: '28px 32px',
-              background: '#FAFAF8',
-              marginBottom: 32,
-            }}>
-              <div className="fg-fr" style={{ fontSize: 28, fontWeight: 400, letterSpacing: '-0.02em', color: '#1A1A1A', marginBottom: 10 }}>
-                LCC
-              </div>
+            <div style={{ border: '1px solid #E5E7EB', borderRadius: 10, padding: '28px 32px', background: '#FAFAF8', marginBottom: 32 }}>
+              <div className="fg-fr" style={{ fontSize: 28, fontWeight: 400, letterSpacing: '-0.02em', color: '#1A1A1A', marginBottom: 10 }}>LCC</div>
               <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.65, margin: 0 }}>
                 {t(
                   "Logistique · Congo. LCC est l'opérateur de cette chambre froide, acquise auprès de FAGOU SRL. Entreprise indépendante, elle assure la réception, le stockage et la distribution des produits importés sur le territoire congolais.",
@@ -322,7 +293,6 @@ export default function ColdStorage() {
                 )}
               </p>
             </div>
-
             <div style={{ height: 1, background: '#E5E7EB', marginBottom: 28 }} />
             <p style={{ fontSize: 15, lineHeight: 1.6, color: '#6B7280', margin: '0 0 28px', maxWidth: 420 }}>
               {t(
@@ -331,25 +301,21 @@ export default function ColdStorage() {
               )}
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <Link to={ROUTES.CONTACT} className="btn-primary">
-                {t('Nous contacter', 'Get in touch')} →
-              </Link>
-              <Link to={ROUTES.CONTACT} className="btn-ghost">
-                {t('Demander un devis', 'Request a quote')}
-              </Link>
+              <Link to={ROUTES.CONTACT} className="btn-primary">{t('Nous contacter', 'Get in touch')} →</Link>
+              <Link to={ROUTES.CONTACT} className="btn-ghost">{t('Demander un devis', 'Request a quote')}</Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Dark CTA ─────────────────────────────────────────────── */}
-      <section style={{ background: '#0F3D14', color: '#fff', padding: '120px 64px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 64, alignItems: 'end' }}>
+      {/* ── Dark CTA ── */}
+      <section style={{ background: '#0F3D14', color: '#fff', padding: `${isMobile ? 72 : 120}px ${px}px` }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.4fr 1fr', gap: isMobile ? 32 : 64, alignItems: 'end' }}>
           <div>
             <div className="fg-eyebrow dark" style={{ marginBottom: 24 }}>↗ FAGOU · {t('Équipement frigorifique', 'Cold storage equipment')}</div>
             <h2
               className="fg-fr"
-              style={{ fontSize: 'clamp(40px, 5vw, 80px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96, color: '#fff' }}
+              style={{ fontSize: 'clamp(36px, 5vw, 80px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96, color: '#fff' }}
             >
               {t('Besoin de froid', 'Need cold storage')}{' '}
               <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.45)' }}>
@@ -370,16 +336,6 @@ export default function ColdStorage() {
           </div>
         </div>
       </section>
-
-      <style>{`
-        @media (max-width: 768px) {
-          section { padding: 80px 24px !important; }
-          h1, h2 { font-size: clamp(40px, 12vw, 72px) !important; }
-          .cold-grid-2 { grid-template-columns: 1fr !important; gap: 40px !important; }
-          .cold-grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
-          .cold-grid-3 { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </div>
   )
 }

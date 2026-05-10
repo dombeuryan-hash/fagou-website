@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import { FagouLogo } from '../common/FagouLogo'
 import { useLanguage } from '../../hooks/useLanguage'
+import { useIsMobile } from '../../hooks/useIsMobile'
 import { departments } from '../../data/departmentsData'
 import { ROUTES } from '../../constants'
 
 export function Footer() {
   const { t, language } = useLanguage()
+  const isMobile = useIsMobile()
 
   const houseLinks = [
     { label: t('Maison', 'House'), path: ROUTES.HOME },
@@ -42,7 +44,7 @@ export function Footer() {
 
   const linkStyle = {
     fontFamily: 'Fraunces, Georgia, serif',
-    fontSize: 18,
+    fontSize: isMobile ? 16 : 18,
     color: 'rgba(255,255,255,0.92)',
     fontWeight: 400,
     letterSpacing: '-0.02em',
@@ -52,10 +54,12 @@ export function Footer() {
     transition: 'color 200ms ease',
   } as const
 
+  const px = isMobile ? 20 : 64
+
   return (
-    <footer style={{ background: '#0F3D14', color: '#fff', padding: '88px 64px 40px' }}>
+    <footer style={{ background: '#0F3D14', color: '#fff', padding: `${isMobile ? 56 : 88}px ${px}px ${isMobile ? 32 : 40}px` }}>
       {/* Logo + tagline */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: 72 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: isMobile ? 48 : 72 }}>
         <FagouLogo size={36} dark />
         <span
           className="fg-mono"
@@ -75,8 +79,8 @@ export function Footer() {
         </span>
       </div>
 
-      {/* 4-column grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 56, marginBottom: 64 }}>
+      {/* Link columns */}
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: isMobile ? 40 : 56, marginBottom: isMobile ? 48 : 64 }}>
         {cols.map((col) => (
           <div key={col.title}>
             <div
@@ -112,7 +116,7 @@ export function Footer() {
 
       {/* Bottom bar */}
       <div style={{ height: 1, background: 'rgba(242,247,242,0.18)', marginBottom: 24 }} />
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: 8 }}>
         <div className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.14em', color: 'rgba(242,247,242,0.6)', textTransform: 'uppercase' }}>
           © 2013 – {new Date().getFullYear()} Fagou SPRL · Chaussée d'Alsemberg 842, 1180 Uccle, Belgique
         </div>
@@ -120,14 +124,6 @@ export function Footer() {
           TVA · BE [n° à confirmer] · RPM Bruxelles
         </div>
       </div>
-
-      {/* Mobile footer override */}
-      <style>{`
-        @media (max-width: 768px) {
-          footer > div:nth-child(2) { padding: 60px 24px 32px !important; }
-          footer > div:nth-child(3) { grid-template-columns: 1fr !important; gap: 40px !important; }
-        }
-      `}</style>
     </footer>
   )
 }

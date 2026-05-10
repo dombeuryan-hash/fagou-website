@@ -36,7 +36,7 @@ export default function Suppliers() {
       </section>
 
       <section style={{ backgroundColor: '#F3F4F6', padding: '60px 24px' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '28px' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))', gap: '28px' }}>
           {[
             { icon: <Globe size={28} color="#1A5C1A" />, titleFr: 'Accès marchés africains', titleEn: 'Access to African markets', descFr: 'Distribuez vos produits dans nos marchés partenaires en Afrique centrale et occidentale.', descEn: 'Distribute your products in our partner markets in Central and West Africa.' },
             { icon: <Award size={28} color="#1A5C1A" />, titleFr: 'Certifications reconnues', titleEn: 'Recognized certifications', descFr: 'Nous valorisons les fournisseurs certifiés CE, ISO, GlobalGAP, RSPO et autres standards.', descEn: 'We value suppliers certified CE, ISO, GlobalGAP, RSPO, and other standards.' },

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Nav } from '../components/layout/Nav'
 import { useLanguage } from '../hooks/useLanguage'
+import { useIsMobile } from '../hooks/useIsMobile'
 import { ROUTES } from '../constants'
 import { useCatalogue } from '../hooks/useCatalogue'
 import { useSiteSettings } from '../hooks/useSiteSettings'
@@ -9,9 +10,7 @@ import { useSiteSettings } from '../hooks/useSiteSettings'
 const FALLBACK_CARGO = 'https://images.unsplash.com/photo-1494412651409-8963ce7935a7?w=1920&q=80'
 const FALLBACK_VOLAILLE = 'assets/product-volaille.png'
 const FALLBACK_POISSONS = 'assets/product-poissons.png'
-const FALLBACK_OIGNONS = 'assets/product-oignons-rouges-gala.png'
-
-// ── Shared primitives ────────────────────────────────────────────────────────
+const FALLBACK_OIGNONS  = 'assets/product-oignons-rouges-gala.png'
 
 function Photo({
   image,
@@ -80,12 +79,11 @@ function Photo({
   )
 }
 
-// ── Page ─────────────────────────────────────────────────────────────────────
-
 export default function Home() {
   const { t, language } = useLanguage()
   const { departments } = useCatalogue()
   const { settings } = useSiteSettings()
+  const isMobile = useIsMobile()
 
   const heroCargo = settings['home_hero_cargo'] || FALLBACK_CARGO
   const photoVolaille = settings['home_photo_1'] || FALLBACK_VOLAILLE
@@ -105,16 +103,18 @@ export default function Home() {
     { n: '03', title: t('Expédier', 'Ship'), body: t("Conteneur reefer ou sec, documents douaniers, suivi jusqu'au port d'arrivée.", 'Reefer or dry container, customs documents, tracking to the port of arrival.') },
   ]
 
+  const px = isMobile ? 20 : 64
+
   return (
     <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
       <Nav dark />
 
       {/* ── HERO ── */}
-      <section style={{ background: '#0F3D14', color: '#fff', padding: '220px 64px 0', position: 'relative' }}>
+      <section style={{ background: '#0F3D14', color: '#fff', padding: `${isMobile ? 120 : 220}px ${px}px 0`, position: 'relative' }}>
         <div className="fg-eyebrow dark">↗ 01 / 06 · {t('Maison', 'House')}</div>
         <h1
           className="fg-fr"
-          style={{ fontSize: 'clamp(56px, 10vw, 144px)', margin: '40px 0 0', fontWeight: 400, color: '#fff', maxWidth: 1180, letterSpacing: '-0.04em', lineHeight: 0.92 }}
+          style={{ fontSize: 'clamp(48px, 10vw, 144px)', margin: '40px 0 0', fontWeight: 400, color: '#fff', maxWidth: 1180, letterSpacing: '-0.04em', lineHeight: 0.92 }}
         >
           {t('Négoce', 'Agri-food')}{' '}
           <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.55)' }}>
@@ -122,8 +122,8 @@ export default function Home() {
           </span>{' '}
           {t('depuis Bruxelles', 'out of Brussels')}
         </h1>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, marginTop: 72, alignItems: 'end', paddingBottom: 80 }}>
-          <p style={{ fontSize: 18, lineHeight: 1.55, color: 'rgba(255,255,255,0.72)', margin: 0, maxWidth: 480 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 64, marginTop: isMobile ? 40 : 72, alignItems: 'end', paddingBottom: isMobile ? 48 : 80 }}>
+          <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.55, color: 'rgba(255,255,255,0.72)', margin: 0, maxWidth: 480 }}>
             {t(
               'Fagou achète, agrège et expédie. Quatre départements, un seul interlocuteur, des cotations sous 48 heures, vers le monde entier.',
               'Fagou sources, aggregates and ships. Four departments, one direct contact, quotations within 48 hours, worldwide.'
@@ -135,15 +135,15 @@ export default function Home() {
           </div>
         </div>
         {/* Full-bleed cargo ship */}
-        <div style={{ marginLeft: -64, marginRight: -64, position: 'relative' }}>
+        <div style={{ marginLeft: -px, marginRight: -px, position: 'relative' }}>
           <Photo
             image={heroCargo}
             label={t('porte-conteneurs · port d\'anvers', 'container ship · port of antwerp')}
-            ratio="21 / 9"
+            ratio={isMobile ? '4 / 3' : '21 / 9'}
             dark
             objectPosition="center 55%"
           />
-          <div style={{ position: 'absolute', left: 64, bottom: 28 }}>
+          <div style={{ position: 'absolute', left: px, bottom: 28 }}>
             <span
               className="fg-mono"
               style={{ fontSize: 10, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.16em', textTransform: 'uppercase', background: 'rgba(15,61,20,0.6)', padding: '6px 12px', backdropFilter: 'blur(4px)' }}
@@ -155,24 +155,28 @@ export default function Home() {
       </section>
 
       {/* ── STATS ROW ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
         {stats.map((s, i) => (
           <div
             key={i}
-            style={{ padding: '40px 36px', borderRight: i < 3 ? '1px solid #E5E7EB' : 'none' }}
+            style={{
+              padding: isMobile ? '28px 20px' : '40px 36px',
+              borderRight: isMobile ? (i % 2 === 0 ? '1px solid #E5E7EB' : 'none') : (i < 3 ? '1px solid #E5E7EB' : 'none'),
+              borderBottom: isMobile && i < 2 ? '1px solid #E5E7EB' : 'none',
+            }}
           >
-            <div className="fg-fr" style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1, color: '#1A1A1A' }}>
+            <div className="fg-fr" style={{ fontSize: 'clamp(28px, 5vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1, color: '#1A1A1A' }}>
               {s.value}
             </div>
-            <div style={{ fontSize: 14, color: '#1A1A1A', marginTop: 12, fontWeight: 500 }}>{s.label}</div>
+            <div style={{ fontSize: 13, color: '#1A1A1A', marginTop: 10, fontWeight: 500 }}>{s.label}</div>
             <div className="fg-mono" style={{ fontSize: 10, color: '#6B7280', marginTop: 6, letterSpacing: '0.12em', textTransform: 'uppercase' }}>{s.sub}</div>
           </div>
         ))}
       </div>
 
       {/* ── DEPARTMENTS GRID ── */}
-      <section style={{ padding: '120px 64px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'end', marginBottom: 64 }}>
+      <section style={{ padding: `${isMobile ? 64 : 120}px ${px}px` }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 64, alignItems: 'end', marginBottom: isMobile ? 40 : 64 }}>
           <div>
             <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Catalogue', 'Catalogue')}</div>
             <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 4vw, 64px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
@@ -192,7 +196,7 @@ export default function Home() {
             </a>
           </div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 32 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: isMobile ? 20 : 32 }}>
           {departments.map((d) => (
             <Link
               key={d.id}
@@ -205,14 +209,14 @@ export default function Home() {
                 label={language === 'fr' ? (d.coverAltFr ?? '') : (d.coverAltEn ?? '')}
                 ratio="16 / 10"
               />
-              <div style={{ padding: '32px 36px 36px' }}>
+              <div style={{ padding: isMobile ? '24px 20px 28px' : '32px 36px 36px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
                   <span className="fg-mono" style={{ fontSize: 11, color: '#1A5C1A', letterSpacing: '0.16em' }}>↗ {d.code}</span>
                   <span className="fg-mono" style={{ fontSize: 10, color: '#6B7280', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
                     {d.products.length} {t('références', 'references')}
                   </span>
                 </div>
-                <h3 className="fg-fr" style={{ fontSize: 38, margin: 0, fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1.02 }}>
+                <h3 className="fg-fr" style={{ fontSize: isMobile ? 30 : 38, margin: 0, fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1.02 }}>
                   {language === 'fr' ? d.nameFr : d.nameEn}
                 </h3>
                 <p style={{ fontSize: 14, color: '#6B7280', margin: '14px 0 18px', lineHeight: 1.55 }}>
@@ -237,19 +241,25 @@ export default function Home() {
       </section>
 
       {/* ── PROCESS ── */}
-      <section style={{ padding: '120px 64px', background: '#fff', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
-        <div style={{ marginBottom: 56 }}>
+      <section style={{ padding: `${isMobile ? 64 : 120}px ${px}px`, background: '#fff', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
+        <div style={{ marginBottom: isMobile ? 40 : 56 }}>
           <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Notre façon de négocier', 'How we trade')}</div>
           <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 4vw, 64px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
             {t('Sourcer,', 'Source,')}{' '}
             <span style={{ fontStyle: 'italic', color: '#6B7280' }}>{t('agréger, expédier.', 'aggregate, ship.')}</span>
           </h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 48, borderTop: '1px solid #E5E7EB' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 0 : 48, borderTop: '1px solid #E5E7EB' }}>
           {processSteps.map((step, i) => (
             <div
               key={i}
-              style={{ paddingTop: 32, borderRight: i < 2 ? '1px solid #E5E7EB' : 'none', paddingRight: i < 2 ? 32 : 0 }}
+              style={{
+                paddingTop: 32,
+                paddingBottom: isMobile ? 32 : 0,
+                borderRight: !isMobile && i < 2 ? '1px solid #E5E7EB' : 'none',
+                borderBottom: isMobile && i < 2 ? '1px solid #E5E7EB' : 'none',
+                paddingRight: !isMobile && i < 2 ? 32 : 0,
+              }}
             >
               <div className="fg-mono" style={{ fontSize: 11, color: '#1A5C1A', letterSpacing: '0.16em', marginBottom: 24 }}>↗ {step.n}</div>
               <h3 className="fg-fr" style={{ fontSize: 44, margin: 0, fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1 }}>{step.title}</h3>
@@ -260,16 +270,16 @@ export default function Home() {
       </section>
 
       {/* ── PRODUCT PHOTO BAND ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
-        <Photo image={photoVolaille} label={t('volaille · découpes fraîches', 'poultry · fresh cuts')} ratio="4 / 3" />
-        <Photo image={photoPoissons} label={t('poissons · sur glace', 'fish · on ice')} ratio="4 / 3" />
-        <Photo image={photoOignons} label={t('oignons rouges · sacs gala', 'red onions · gala bags')} ratio="4 / 3" />
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)' }}>
+        <Photo image={photoVolaille} label={t('volaille · découpes fraîches', 'poultry · fresh cuts')} ratio={isMobile ? '3 / 2' : '4 / 3'} />
+        <Photo image={photoPoissons} label={t('poissons · sur glace', 'fish · on ice')} ratio={isMobile ? '3 / 2' : '4 / 3'} />
+        <Photo image={photoOignons} label={t('oignons rouges · sacs gala', 'red onions · gala bags')} ratio={isMobile ? '3 / 2' : '4 / 3'} />
       </div>
 
       {/* ── FINAL CTA ── */}
-      <section style={{ background: '#1A5C1A', color: '#fff', padding: '128px 64px' }}>
+      <section style={{ background: '#1A5C1A', color: '#fff', padding: `${isMobile ? 72 : 128}px ${px}px` }}>
         <div className="fg-eyebrow dark" style={{ marginBottom: 36 }}>↗ {t('Parler à Fagou', 'Talk to Fagou')}</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 64, alignItems: 'end' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.4fr 1fr', gap: isMobile ? 32 : 64, alignItems: 'end' }}>
           <h2
             className="fg-fr"
             style={{ fontSize: 'clamp(40px, 6vw, 88px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96, color: '#fff' }}
@@ -293,23 +303,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Responsive overrides */}
-      <style>{`
-        @media (max-width: 768px) {
-          #home-hero { padding: 120px 24px 0 !important; }
-          #home-hero h1 { font-size: 64px !important; }
-          #home-hero-lede { grid-template-columns: 1fr !important; }
-          #home-hero .hero-ship { margin-left: -24px !important; margin-right: -24px !important; }
-          #home-stats { grid-template-columns: repeat(2,1fr) !important; }
-          #home-depts-header { grid-template-columns: 1fr !important; gap: 24px !important; }
-          #home-depts-grid { grid-template-columns: 1fr !important; }
-          #home-process-grid { grid-template-columns: 1fr !important; }
-          #home-photos { grid-template-columns: 1fr !important; }
-          #home-cta { padding: 72px 24px !important; }
-          #home-cta-inner { grid-template-columns: 1fr !important; gap: 28px !important; }
-        }
-      `}</style>
     </div>
   )
 }

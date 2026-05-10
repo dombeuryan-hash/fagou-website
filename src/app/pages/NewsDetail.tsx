@@ -78,7 +78,7 @@ export default function NewsDetail() {
             <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 800, fontSize: '24px', marginBottom: '28px' }}>
               {t('Articles liés', 'Related articles')}
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))', gap: '24px' }}>
               {relatedArticles.map((rel) => (
                 <Link key={rel.id} to={`${ROUTES.NEWS}/${rel.id}`} style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', overflow: 'hidden', border: '1px solid #E5E7EB', display: 'block' }}>
                   <ImageWithFallback src={rel.image} alt={t(rel.titleFr, rel.titleEn)} style={{ width: '100%', height: '180px', objectFit: 'cover' }} />

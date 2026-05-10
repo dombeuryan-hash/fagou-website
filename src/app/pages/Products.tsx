@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Nav } from '../components/layout/Nav'
 import { useLanguage } from '../hooks/useLanguage'
+import { useIsMobile } from '../hooks/useIsMobile'
 import { useCatalogue } from '../hooks/useCatalogue'
 import type { FlatProduct } from '../hooks/useCatalogue'
 
@@ -61,19 +62,21 @@ function ProductCard({ product, lang }: { product: FlatProduct; lang: string }) 
 export default function Products() {
   const { t, language } = useLanguage()
   const { departments, allProducts, loading } = useCatalogue()
+  const isMobile = useIsMobile()
   const [deptFilter, setDeptFilter] = useState('all')
   const [view, setView] = useState<'grid' | 'list'>('grid')
 
   const filtered = deptFilter === 'all' ? allProducts : allProducts.filter((p) => p.dept === deptFilter)
+  const px = isMobile ? 20 : 64
 
   return (
     <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
       <Nav />
 
       {/* Sub-hero */}
-      <section style={{ padding: '180px 64px 80px', borderBottom: '1px solid #E5E7EB' }}>
-        <div className="fg-eyebrow" style={{ marginBottom: 56 }}>↗ 02 / 06 · {t('Catalogue', 'Catalogue')}</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 64, alignItems: 'end' }}>
+      <section style={{ padding: `${isMobile ? 100 : 180}px ${px}px ${isMobile ? 48 : 80}px`, borderBottom: '1px solid #E5E7EB' }}>
+        <div className="fg-eyebrow" style={{ marginBottom: isMobile ? 32 : 56 }}>↗ 02 / 06 · {t('Catalogue', 'Catalogue')}</div>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.4fr 1fr', gap: isMobile ? 24 : 64, alignItems: 'end' }}>
           <h1 className="fg-fr" style={{ fontSize: 'clamp(48px, 8vw, 128px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.92 }}>
             {t('Catalogue', 'Fagou')}{' '}
             <span style={{ fontStyle: 'italic', color: '#6B7280' }}>{t('Fagou.', 'catalogue.')}</span>
@@ -88,16 +91,18 @@ export default function Products() {
       </section>
 
       {/* Main content */}
-      <section style={{ padding: '80px 64px 120px' }}>
+      <section style={{ padding: `${isMobile ? 40 : 80}px ${px}px ${isMobile ? 64 : 120}px` }}>
         {/* Toolbar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, marginBottom: 32, paddingBottom: 24, borderBottom: '1px solid #E5E7EB' }}>
           <div className="fg-mono" style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#6B7280' }}>
             {filtered.length} {t('références', 'references')}
           </div>
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            <a href="catalog.pdf" download className="btn-ghost" style={{ padding: '10px 18px', fontSize: 12 }}>
-              ↓ {t('Télécharger le catalogue PDF', 'Download catalogue PDF')}
-            </a>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+            {!isMobile && (
+              <a href="catalog.pdf" download className="btn-ghost" style={{ padding: '10px 18px', fontSize: 12 }}>
+                ↓ {t('Télécharger le catalogue PDF', 'Download catalogue PDF')}
+              </a>
+            )}
             <div style={{ display: 'flex', border: '1px solid #E5E7EB', borderRadius: 999, padding: 3 }}>
               {(['grid', 'list'] as const).map((v) => (
                 <button
@@ -113,44 +118,69 @@ export default function Products() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 56 }}>
-          {/* Filter rail */}
-          <aside style={{ position: 'sticky', top: 32, alignSelf: 'start' }}>
-            <div className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#6B7280', marginBottom: 14 }}>
-              ↗ {t('Département', 'Department')}
-            </div>
-            <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-              <li>
-                <button
-                  onClick={() => setDeptFilter('all')}
-                  className="fg-mono"
-                  style={{ width: '100%', textAlign: 'left', background: 'transparent', border: 0, cursor: 'pointer', padding: '10px 0', borderBottom: '1px solid #E5E7EB', fontSize: 12, color: deptFilter === 'all' ? '#1A5C1A' : '#1A1A1A', fontWeight: deptFilter === 'all' ? 600 : 400, letterSpacing: '0.04em', display: 'flex', justifyContent: 'space-between' }}
-                >
-                  <span>{t('Tout', 'All')}</span>
-                  <span style={{ color: '#6B7280' }}>{allProducts.length}</span>
-                </button>
-              </li>
-              {departments.map((d) => (
-                <li key={d.id}>
+        {/* Mobile: horizontal filter pills */}
+        {isMobile && (
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 24 }}>
+            <button
+              onClick={() => setDeptFilter('all')}
+              className="fg-mono"
+              style={{ padding: '8px 14px', borderRadius: 999, border: `1px solid ${deptFilter === 'all' ? '#1A5C1A' : '#E5E7EB'}`, background: deptFilter === 'all' ? '#1A5C1A' : '#fff', color: deptFilter === 'all' ? '#fff' : '#1A1A1A', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer' }}
+            >
+              {t('Tout', 'All')} ({allProducts.length})
+            </button>
+            {departments.map((d) => (
+              <button
+                key={d.id}
+                onClick={() => setDeptFilter(d.id)}
+                className="fg-mono"
+                style={{ padding: '8px 14px', borderRadius: 999, border: `1px solid ${deptFilter === d.id ? '#1A5C1A' : '#E5E7EB'}`, background: deptFilter === d.id ? '#1A5C1A' : '#fff', color: deptFilter === d.id ? '#fff' : '#1A1A1A', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer' }}
+              >
+                {language === 'fr' ? d.nameFr : d.nameEn} ({d.products.length})
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '220px 1fr', gap: isMobile ? 0 : 56 }}>
+          {/* Desktop filter rail */}
+          {!isMobile && (
+            <aside style={{ position: 'sticky', top: 32, alignSelf: 'start' }}>
+              <div className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#6B7280', marginBottom: 14 }}>
+                ↗ {t('Département', 'Department')}
+              </div>
+              <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                <li>
                   <button
-                    onClick={() => setDeptFilter(d.id)}
+                    onClick={() => setDeptFilter('all')}
                     className="fg-mono"
-                    style={{ width: '100%', textAlign: 'left', background: 'transparent', border: 0, cursor: 'pointer', padding: '10px 0', borderBottom: '1px solid #E5E7EB', fontSize: 12, color: deptFilter === d.id ? '#1A5C1A' : '#1A1A1A', fontWeight: deptFilter === d.id ? 600 : 400, letterSpacing: '0.04em', display: 'flex', justifyContent: 'space-between' }}
+                    style={{ width: '100%', textAlign: 'left', background: 'transparent', border: 0, cursor: 'pointer', padding: '10px 0', borderBottom: '1px solid #E5E7EB', fontSize: 12, color: deptFilter === 'all' ? '#1A5C1A' : '#1A1A1A', fontWeight: deptFilter === 'all' ? 600 : 400, letterSpacing: '0.04em', display: 'flex', justifyContent: 'space-between' }}
                   >
-                    <span>{d.code}. {language === 'fr' ? d.nameFr : d.nameEn}</span>
-                    <span style={{ color: '#6B7280' }}>{d.products.length}</span>
+                    <span>{t('Tout', 'All')}</span>
+                    <span style={{ color: '#6B7280' }}>{allProducts.length}</span>
                   </button>
                 </li>
-              ))}
-            </ul>
-          </aside>
+                {departments.map((d) => (
+                  <li key={d.id}>
+                    <button
+                      onClick={() => setDeptFilter(d.id)}
+                      className="fg-mono"
+                      style={{ width: '100%', textAlign: 'left', background: 'transparent', border: 0, cursor: 'pointer', padding: '10px 0', borderBottom: '1px solid #E5E7EB', fontSize: 12, color: deptFilter === d.id ? '#1A5C1A' : '#1A1A1A', fontWeight: deptFilter === d.id ? 600 : 400, letterSpacing: '0.04em', display: 'flex', justifyContent: 'space-between' }}
+                    >
+                      <span>{d.code}. {language === 'fr' ? d.nameFr : d.nameEn}</span>
+                      <span style={{ color: '#6B7280' }}>{d.products.length}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          )}
 
           {/* Product content */}
           <div>
             {loading ? (
               <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#6B7280', padding: '40px 0' }}>Chargement…</p>
             ) : view === 'grid' ? (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: isMobile ? 14 : 24 }}>
                 {filtered.map((p) => (
                   <ProductCard key={p.code} product={p} lang={language} />
                 ))}
@@ -161,7 +191,20 @@ export default function Products() {
                   const name = language === 'fr' ? p.nameFr : p.nameEn
                   const ref = language === 'fr' ? p.refFr : p.refEn
                   const photoLabel = language === 'fr' ? (p.photoAltFr ?? '') : (p.photoAltEn ?? '')
-                  return (
+                  return isMobile ? (
+                    <Link
+                      key={p.code}
+                      to={`/produit/${p.code}`}
+                      style={{ display: 'grid', gridTemplateColumns: '72px 1fr', gap: 16, padding: '16px 0', borderBottom: '1px solid #E5E7EB', textDecoration: 'none', color: 'inherit', alignItems: 'center' }}
+                    >
+                      <Photo image={p.image} label={photoLabel} ratio="1 / 1" />
+                      <div>
+                        <span className="fg-mono" style={{ fontSize: 10, color: '#6B7280', letterSpacing: '0.12em', display: 'block' }}>{p.code}</span>
+                        <h3 className="fg-fr" style={{ fontSize: 20, margin: '4px 0 4px', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.05 }}>{name}</h3>
+                        <span style={{ fontSize: 12, color: '#6B7280' }}>{ref}</span>
+                      </div>
+                    </Link>
+                  ) : (
                     <Link
                       key={p.code}
                       to={`/produit/${p.code}`}
@@ -182,14 +225,6 @@ export default function Products() {
           </div>
         </div>
       </section>
-
-      <style>{`
-        @media (max-width: 768px) {
-          #catalog-hero { padding: 120px 24px 48px !important; grid-template-columns: 1fr !important; }
-          #catalog-main { padding: 40px 24px 64px !important; grid-template-columns: 1fr !important; }
-          #catalog-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
-        }
-      `}</style>
     </div>
   )
 }
