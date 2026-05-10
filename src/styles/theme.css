@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #1A5C1A;
+  --color-primary-hover: #154d15;
+  --color-secondary: #2E8B2E;
+  --color-accent: #C0392B;
+  --color-bg: #FAFAF8;
+  --color-text: #1A1A1A;
+  --color-gray: #6B7280;
+  --color-border: #E5E7EB;
+  --color-admin-navy: #0F3D14;
+  --color-admin-navy-dark: #0A2D0C;
+  --color-white: #FFFFFF;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.10);
+
+  --transition-fast: 200ms ease;
+  --transition-normal: 300ms ease;
+
+  --font-title: 'Montserrat', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}

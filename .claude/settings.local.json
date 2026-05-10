@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npm install *)",
+      "Bash(npx tsx *)",
+      "Bash(npx tsc *)",
+      "Bash(SUPABASE_SERVICE_KEY=sb_secret_RIJOgjb0GdouJI9iY8lr2A_p6x8Pbw7 npx tsx scripts/migrate-catalogue.ts)",
+      "Bash(SUPABASE_SERVICE_KEY=sb_secret_RIJOgjb0GdouJI9iY8lr2A_p6x8Pbw7 npx tsx scripts/migrate-merge-products.ts)",
+      "Bash(supabase --version)",
+      "Bash(npx supabase *)",
+      "Bash(Select-Object Name)",
+      "Bash(irm https://deno.land/install.ps1)",
+      "Bash(iex)",
+      "PowerShell(irm https://deno.land/install.ps1 | iex)",
+      "Bash(\"C:\\\\Users\\\\dombe\\\\.deno\\\\bin\\\\deno.exe\" cache *)",
+      "Bash(git remote *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
