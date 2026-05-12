@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { ROUTES } from '../../constants'
+import { FagouLogo } from '../common/FagouLogo'
 
 interface AdminNavItem {
   label: string
@@ -67,18 +68,7 @@ export function AdminLayout() {
           gap: '12px',
           flexShrink: 0,
         }}>
-          <img
-            src="/assets/logo-fagou-light.png"
-            alt="FAGOU SRL"
-            style={{
-              height: collapsed ? '28px' : '32px',
-              width: collapsed ? '28px' : 'auto',
-              objectFit: 'contain',
-              objectPosition: 'left',
-              flexShrink: 0,
-              transition: 'height var(--transition-fast)',
-            }}
-          />
+          <FagouLogo size={collapsed ? 22 : 26} dark={true} />
           {!collapsed && (
             <div style={{ overflow: 'hidden' }}>
               <p className="fg-mono" style={{

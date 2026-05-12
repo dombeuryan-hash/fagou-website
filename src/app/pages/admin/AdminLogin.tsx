@@ -3,6 +3,7 @@ import { useNavigate, Navigate } from 'react-router-dom'
 import { Mail, Eye, EyeOff, ArrowRight, Lock } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { ROUTES, COMPANY_ADDRESS } from '../../constants'
+import { FagouLogo } from '../../components/common/FagouLogo'
 
 const MAX_ATTEMPTS = 5
 const COOLDOWN_SECONDS = 300
@@ -96,7 +97,7 @@ export default function AdminLogin() {
 
         {/* Logo */}
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <img src="/assets/logo-fagou-light.png" alt="FAGOU SRL" style={{ height: '44px', objectFit: 'contain' }} />
+          <FagouLogo size={30} dark={true} />
         </div>
 
         {/* Contenu éditorial */}
@@ -166,8 +167,8 @@ export default function AdminLogin() {
       }}>
 
         {/* Logo mobile */}
-        <div className="fg-mobile-only" style={{ marginBottom: '40px', textAlign: 'center' }}>
-          <img src="/assets/logo-fagou-dark.png" alt="FAGOU SRL" style={{ height: '38px', objectFit: 'contain', margin: '0 auto' }} />
+        <div className="fg-mobile-only" style={{ marginBottom: '40px', display: 'flex', justifyContent: 'center' }}>
+          <FagouLogo size={26} />
         </div>
 
         {/* En-tête formulaire */}
