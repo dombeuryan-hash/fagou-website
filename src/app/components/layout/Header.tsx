@@ -161,7 +161,7 @@ export function Header() {
       )}
 
       <style>{`
-        @media (max-width: 900px) {
+        @media (max-width: 1200px) {
           .desktop-nav { display: none !important; }
           .mobile-menu-btn { display: flex !important; }
         }
