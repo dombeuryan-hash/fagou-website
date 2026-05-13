@@ -88,7 +88,8 @@ export default function Home() {
   const heroCargo = settings['home_hero_cargo'] || FALLBACK_CARGO
   const photoVolaille = settings['home_photo_1'] || FALLBACK_VOLAILLE
   const photoPoissons = settings['home_photo_2'] || FALLBACK_POISSONS
-  const photoOignons  = settings['home_photo_3'] || FALLBACK_OIGNONS
+  const photoOignons       = settings['home_photo_3'] || FALLBACK_OIGNONS
+  const coldStoragePhoto   = settings['coldstorage_hero'] || undefined
 
   const stats = [
     { value: '2013', label: t('fondée à Bruxelles', 'founded in Brussels'), sub: t('siège social · Uccle', 'head office · Uccle') },
@@ -237,6 +238,86 @@ export default function Home() {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* ── COLD STORAGE TEASER ── */}
+      <section style={{ background: '#0F3D14', position: 'relative', overflow: 'hidden' }}>
+        {/* dot-grid decoration */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
+        }} />
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+          position: 'relative',
+          zIndex: 1,
+        }}>
+          {/* Text */}
+          <div style={{
+            padding: isMobile ? `56px ${px}px` : `80px ${px}px`,
+            display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          }}>
+            <div className="fg-eyebrow dark" style={{ marginBottom: 20 }}>
+              ↗ 03 · {t('Chambre froide', 'Cold storage')}
+            </div>
+            <h2 className="fg-fr" style={{
+              fontSize: 'clamp(32px, 3.5vw, 56px)',
+              fontWeight: 400, color: '#fff', margin: '0 0 20px',
+              letterSpacing: '-0.035em', lineHeight: 0.96,
+            }}>
+              {t('Froid industriel,', 'Industrial cold,')}{' '}
+              <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.45)' }}>
+                {t('depuis Bruxelles.', 'from Brussels.')}
+              </span>
+            </h2>
+            <p style={{ fontSize: 14, lineHeight: 1.7, color: 'rgba(255,255,255,0.58)', maxWidth: 400, margin: '0 0 32px' }}>
+              {t(
+                'FAGOU a fourni et installé une chambre froide industrielle de 3 100 t au Congo — de −24 °C à l\'ambiant, sur 2 927 m² de panneaux.',
+                'FAGOU supplied and installed a 3,100-t industrial cold storage in Congo — from −24 °C to ambient, across 2,927 m² of panels.'
+              )}
+            </p>
+            <div style={{ display: 'flex', gap: 28, marginBottom: 36, flexWrap: 'wrap' }}>
+              {[
+                { v: '3 100 t', l: t('capacité', 'capacity') },
+                { v: '−24 °C', l: t('surgélation', 'deep freeze') },
+                { v: '2 927 m²', l: t('surface', 'panel area') },
+              ].map((s) => (
+                <div key={s.v}>
+                  <div className="fg-fr" style={{ fontSize: 28, color: '#fff', lineHeight: 1, marginBottom: 5 }}>{s.v}</div>
+                  <div className="fg-mono" style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{s.l}</div>
+                </div>
+              ))}
+            </div>
+            <div>
+              <Link to={ROUTES.COLD} className="btn-light">
+                {t('Voir la chambre froide', 'View cold storage')} →
+              </Link>
+            </div>
+          </div>
+
+          {/* Photo — same source as ColdStorage.tsx hero */}
+          <div style={{ position: 'relative', height: isMobile ? 260 : 'auto', overflow: 'hidden' }}>
+            {coldStoragePhoto ? (
+              <img
+                src={coldStoragePhoto}
+                alt={t('Chambre froide installée par FAGOU · Congo', 'Cold storage installed by FAGOU · Congo')}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
+            ) : (
+              <div style={{
+                position: 'absolute', inset: 0,
+                backgroundImage: 'repeating-linear-gradient(135deg, transparent 0 7px, rgba(255,255,255,0.04) 7px 8px)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <span className="fg-mono" style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+                  {t('chambre froide · lcc congo', 'cold storage · lcc congo')}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
