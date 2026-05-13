@@ -35,7 +35,7 @@ export function Nav({ dark = false }: NavProps) {
     <>
       {/* Desktop nav */}
       <div
-        className="fg-desktop-only"
+        className="fg-desktop-only nav-desktop"
         style={{
           position: 'absolute',
           top: 0, left: 0, right: 0,
@@ -130,7 +130,7 @@ export function Nav({ dark = false }: NavProps) {
 
       {/* Mobile nav */}
       <div
-        className="fg-mobile-only"
+        className="fg-mobile-only nav-mobile-bar"
         style={{
           position: 'absolute',
           top: 0, left: 0, right: 0,
@@ -204,7 +204,7 @@ export function Nav({ dark = false }: NavProps) {
 
       {open && (
         <div
-          className="fg-mobile-only"
+          className="fg-mobile-only nav-mobile-bar"
           style={{
             position: 'absolute',
             top: 60,
@@ -246,6 +246,13 @@ export function Nav({ dark = false }: NavProps) {
           </Link>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 1024px) {
+          .nav-desktop { display: none !important; }
+          .nav-mobile-bar { display: flex !important; }
+        }
+      `}</style>
     </>
   )
 }
