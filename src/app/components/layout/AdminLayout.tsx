@@ -68,7 +68,7 @@ export function AdminLayout() {
           gap: '12px',
           flexShrink: 0,
         }}>
-          <FagouLogo size={collapsed ? 22 : 26} dark={true} />
+          <FagouLogo size={collapsed ? 28 : 36} dark={true} />
           {!collapsed && (
             <div style={{ overflow: 'hidden' }}>
               <p className="fg-mono" style={{

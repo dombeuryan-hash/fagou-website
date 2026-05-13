@@ -97,7 +97,7 @@ export default function AdminLogin() {
 
         {/* Logo */}
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <FagouLogo size={30} dark={true} />
+          <FagouLogo size={40} dark={true} />
         </div>
 
         {/* Contenu éditorial */}
@@ -168,7 +168,7 @@ export default function AdminLogin() {
 
         {/* Logo mobile */}
         <div className="fg-mobile-only" style={{ marginBottom: '40px', display: 'flex', justifyContent: 'center' }}>
-          <FagouLogo size={26} />
+          <FagouLogo size={36} />
         </div>
 
         {/* En-tête formulaire */}

@@ -52,7 +52,7 @@ export function Header() {
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '70px' }}
         >
           <NavLink to={ROUTES.HOME} aria-label="FAGOU SRL — Accueil">
-            <FagouLogo />
+            <FagouLogo size={40} />
           </NavLink>
 
           {/* Desktop nav */}

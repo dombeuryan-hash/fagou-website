@@ -60,7 +60,7 @@ export function Footer() {
     <footer style={{ background: '#0F3D14', color: '#fff', padding: `${isMobile ? 56 : 88}px ${px}px ${isMobile ? 32 : 40}px` }}>
       {/* Logo + tagline */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: isMobile ? 48 : 72 }}>
-        <FagouLogo size={36} dark />
+        <FagouLogo size={40} dark />
         <span
           className="fg-mono"
           style={{

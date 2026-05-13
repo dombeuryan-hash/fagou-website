@@ -51,7 +51,7 @@ export function Nav({ dark = false }: NavProps) {
           to={ROUTES.HOME}
           style={{ display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none' }}
         >
-          <FagouLogo size={28} dark={dark} />
+          <FagouLogo size={40} dark={dark} />
           <span
             className="fg-mono"
             style={{
@@ -61,7 +61,7 @@ export function Nav({ dark = false }: NavProps) {
               textTransform: 'uppercase',
               borderLeft: `1px solid ${borderC}`,
               paddingLeft: 14,
-              height: 28,
+              height: 40,
               display: 'flex',
               alignItems: 'center',
             }}
@@ -144,7 +144,7 @@ export function Nav({ dark = false }: NavProps) {
         }}
       >
         <Link to={ROUTES.HOME} style={{ textDecoration: 'none' }}>
-          <FagouLogo size={22} dark={dark} />
+          <FagouLogo size={32} dark={dark} />
         </Link>
 
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
