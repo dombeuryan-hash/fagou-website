@@ -10,7 +10,7 @@ const RATE_LIMIT_WINDOW = 60  // per hour (in minutes)
 
 const CORS = {
   'Access-Control-Allow-Origin':  '*',
-  'Access-Control-Allow-Headers': 'content-type',
+  'Access-Control-Allow-Headers': 'content-type, authorization',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
@@ -59,11 +59,24 @@ serve(async (req) => {
     }
 
     // ── 3. Insert into contact_messages ─────────────────────────
-    const { error } = await supabase.from('contact_messages').insert({ ...fields, source_ip: ip })
+    const row = {
+      name:      fields.name      ?? null,
+      email:     fields.email     ?? null,
+      phone:     fields.phone     ?? null,
+      country:   fields.country   ?? null,
+      subject:   fields.subject   ?? 'Contact',
+      message:   fields.message   ?? null,
+      interests: fields.interests ?? null,
+      volume:    fields.volume    ?? null,
+      incoterm:  fields.incoterm  ?? null,
+      source_ip: ip,
+    }
+
+    const { error } = await supabase.from('contact_messages').insert(row)
 
     if (error) {
-      console.error('DB insert error:', error)
-      return json({ error: 'Database error' }, 500)
+      console.error('DB insert error:', JSON.stringify(error))
+      return json({ error: 'Database error', detail: error.message }, 500)
     }
 
     return json({ ok: true })
