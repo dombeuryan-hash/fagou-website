@@ -24,7 +24,7 @@ export function Footer() {
     { label: language === 'fr' ? 'Sourcing direct' : 'Direct sourcing', path: ROUTES.ABOUT },
     { label: language === 'fr' ? 'Consolidation export' : 'Export consolidation', path: ROUTES.ABOUT },
     { label: language === 'fr' ? 'Chambre froide' : 'Cold storage', path: ROUTES.COLD },
-    { label: language === 'fr' ? 'Formalités douanières' : 'Customs formalities', path: ROUTES.ABOUT },
+
     { label: language === 'fr' ? 'Cotation 48 h' : 'Quote within 48 h', path: ROUTES.CONTACT },
   ]
 

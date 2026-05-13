@@ -32,7 +32,7 @@ export default function About() {
   const services = [
     { n: '01', title: t('Sourcing', 'Sourcing'), body: t('Identification et sélection des meilleurs fournisseurs mondiaux pour chaque catégorie de produit.', 'Identification and selection of the best global suppliers for each product category.') },
     { n: '02', title: t('Contrôle qualité', 'Quality control'), body: t('Vérification des certifications et normes alimentaires à chaque étape de la chaîne.', 'Verification of certifications and food standards at every stage of the chain.') },
-    { n: '03', title: t('Logistique internationale', 'International logistics'), body: t('Gestion du transport, formalités douanières et livraison jusqu\'à destination.', 'Management of transport, customs formalities and delivery to destination.') },
+    { n: '03', title: t('Logistique internationale', 'International logistics'), body: t('Gestion du transport et livraison jusqu\'à destination.', 'Management of transport and delivery to destination.') },
     { n: '04', title: t('Distribution', 'Distribution'), body: t('Mise en relation avec les acheteurs en Europe et dans le monde entier.', 'Connecting with buyers across Europe and worldwide.') },
     { n: '05', title: t('Conseil', 'Advisory'), body: t('Accompagnement des clients dans leurs achats alimentaires à l\'international.', 'Supporting clients in their international food procurement decisions.') },
   ]
