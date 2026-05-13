@@ -308,6 +308,7 @@ export default function Contact() {
               </span>
               <div className="fg-fr" style={{ fontSize: 24, marginTop: 8, fontWeight: 400, letterSpacing: '-0.02em' }}>{p.name}</div>
               <div className="fg-mono" style={{ fontSize: 11, color: '#6B7280', marginTop: 6, letterSpacing: '0.04em' }}>{p.email}</div>
+              <div className="fg-mono" style={{ fontSize: 11, color: '#6B7280', marginTop: 4, letterSpacing: '0.04em' }}>{p.phone}</div>
             </div>
           ))}
         </div>

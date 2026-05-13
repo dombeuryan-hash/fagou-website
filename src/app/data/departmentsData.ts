@@ -255,17 +255,17 @@ export const PRODUCT_PHOTOS = {
 export const INCOTERMS = ['EXW', 'FCA', 'FOB', 'CFR', 'CIF', 'CPT', 'CIP', 'DAP', 'DPU', 'DDP']
 
 export const CONTACT = {
-  legalName: 'Fagou SPRL',
+  legalName: 'Fagou SRL',
   addressLines: ["Chaussée d'Alsemberg, 842", '1180 Uccle (Bruxelles)', 'Belgique'],
-  mobile: ['+32 465 42 82 59', '+32 487 13 90 59'],
+  mobile: ['+32 490 25 53 52', '+32 46 55 22 756', '+32 491 14 62 66'],
   fixed: '+32 2 273 29 459',
-  emails: ['commercial.export@fagou.be', 'representant@fagou.be', 'trading@fagou.be'],
+  emails: ['trade.manager@fagou.be', 'trading@fagou.be', 'info@fagou.be'],
   website: 'www.fagou.be',
   hoursFr: 'Lun – Ven · 08h30 – 17h30 (CET)',
   hoursEn: 'Mon – Fri · 08:30 – 17:30 (CET)',
   team: [
-    { roleFr: 'Commercial · Export', roleEn: 'Sales · Export', name: '[Nom à confirmer]', email: 'commercial.export@fagou.be' },
-    { roleFr: 'Trading', roleEn: 'Trading', name: '[Nom à confirmer]', email: 'trading@fagou.be' },
-    { roleFr: 'Représentation', roleEn: 'Representation', name: '[Nom à confirmer]', email: 'representant@fagou.be' },
+    { roleFr: 'Trade Manager', roleEn: 'Trade Manager', name: '[Nom à confirmer]', email: 'trade.manager@fagou.be', phone: '+32 490 25 53 52' },
+    { roleFr: 'Trading', roleEn: 'Trading', name: '[Nom à confirmer]', email: 'trading@fagou.be', phone: '+32 46 55 22 756' },
+    { roleFr: 'Information', roleEn: 'Information', name: '[Nom à confirmer]', email: 'info@fagou.be', phone: '+32 491 14 62 66' },
   ],
 }

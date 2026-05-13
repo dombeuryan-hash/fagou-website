@@ -66,7 +66,7 @@ export function Nav({ dark = false }: NavProps) {
               alignItems: 'center',
             }}
           >
-            SPRL · Bruxelles
+            SRL · Bruxelles
           </span>
         </Link>
 
