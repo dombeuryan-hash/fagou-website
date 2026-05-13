@@ -103,7 +103,6 @@ export default function Contact() {
     [t('Horaires', 'Hours'), language === 'fr' ? CONTACT.hoursFr : CONTACT.hoursEn],
     ['Email', CONTACT.emails.join(' · ')],
     ['Tél.', CONTACT.mobile.join(' · ')],
-    ['Tél. fixe', CONTACT.fixed],
     ['Web', CONTACT.website],
   ] as [string, string][]
 
