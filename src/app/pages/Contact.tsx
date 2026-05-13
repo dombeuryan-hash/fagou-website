@@ -283,35 +283,7 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* Direct team */}
-      <section style={{ padding: `${isMobile ? 48 : 120}px ${px}px`, background: '#fff', borderBottom: '1px solid #E5E7EB' }}>
-        <div style={{ marginBottom: isMobile ? 40 : 56 }}>
-          <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('En direct', 'Direct lines')}</div>
-          <h2 className="fg-fr" style={{ fontSize: isMobile ? 40 : 64, margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
-            {t('Trois lignes', 'Three direct')}{' '}
-            <span style={{ fontStyle: 'italic', color: '#6B7280' }}>{t('directes.', 'lines.')}</span>
-          </h2>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 20 : 32 }}>
-          {CONTACT.team.map((p, i) => (
-            <div key={i} style={{ border: '1px solid #E5E7EB', background: '#fff', padding: 24 }}>
-              <div style={{ width: '100%', aspectRatio: '4 / 3', background: '#EEF2EE', position: 'relative', overflow: 'hidden', marginBottom: 18 }}>
-                <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(135deg, transparent 0 7px, rgba(15,61,20,0.08) 7px 8px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(15,61,20,0.55)', textAlign: 'center' }}>
-                    {(language === 'fr' ? p.roleFr : p.roleEn).toLowerCase()} · portrait
-                  </span>
-                </div>
-              </div>
-              <span className="fg-mono" style={{ fontSize: 10, color: '#1A5C1A', letterSpacing: '0.16em', textTransform: 'uppercase' }}>
-                ↗ {language === 'fr' ? p.roleFr : p.roleEn}
-              </span>
-              <div className="fg-fr" style={{ fontSize: 24, marginTop: 8, fontWeight: 400, letterSpacing: '-0.02em' }}>{p.name}</div>
-              <div className="fg-mono" style={{ fontSize: 11, color: '#6B7280', marginTop: 6, letterSpacing: '0.04em' }}>{p.email}</div>
-              <div className="fg-mono" style={{ fontSize: 11, color: '#6B7280', marginTop: 4, letterSpacing: '0.04em' }}>{p.phone}</div>
-            </div>
-          ))}
-        </div>
-      </section>
+
     </div>
   )
 }
