@@ -142,7 +142,7 @@ export default function ProductDetail() {
             <p style={{ fontSize: 16, lineHeight: 1.6, color: '#6B7280', margin: '0 0 28px', maxWidth: 480 }}>{ref}.</p>
 
             {description && (
-              <p style={{ fontSize: 15, lineHeight: 1.7, color: '#374151', margin: '0 0 28px', maxWidth: 480 }}>
+              <p style={{ fontSize: 15, lineHeight: 1.7, color: '#374151', margin: '0 0 28px', maxWidth: 480, whiteSpace: 'pre-line' }}>
                 {description}
               </p>
             )}
