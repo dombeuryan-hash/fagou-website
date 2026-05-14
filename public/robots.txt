@@ -3,4 +3,4 @@ Allow: /
 
 Disallow: /admin/
 
-Sitemap: https://fagou.be/sitemap.xml
+Sitemap: https://www.fagou.be/sitemap.xml
