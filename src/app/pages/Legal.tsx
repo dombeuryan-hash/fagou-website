@@ -1,5 +1,5 @@
 import { useLanguage } from '../hooks/useLanguage'
-import { COMPANY_NAME, COMPANY_ADDRESS_FULL, COMPANY_EMAIL_CONTACT } from '../constants'
+import { COMPANY_NAME, COMPANY_ADDRESS_FULL, COMPANY_EMAIL_CONTACT, COMPANY_TVA } from '../constants'
 
 export default function Legal() {
   const { t } = useLanguage()
@@ -25,8 +25,8 @@ export default function Legal() {
           <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '12px' }}>
             {t('Numéro d\'entreprise', 'Company number')}
           </h2>
-          <p>{t('Numéro BCE', 'CBE number')} : BE 0XXX.XXX.XXX</p>
-          <p>TVA : BE 0XXX.XXX.XXX</p>
+          <p>{t('Numéro BCE', 'CBE number')} : {COMPANY_TVA}</p>
+          <p>TVA : {COMPANY_TVA}</p>
         </section>
 
         <section>

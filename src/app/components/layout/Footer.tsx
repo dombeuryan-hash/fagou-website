@@ -118,10 +118,10 @@ export function Footer() {
       <div style={{ height: 1, background: 'rgba(242,247,242,0.18)', marginBottom: 24 }} />
       <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: 8 }}>
         <div className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.14em', color: 'rgba(242,247,242,0.6)', textTransform: 'uppercase' }}>
-          © 2013 – {new Date().getFullYear()} Fagou SRL · Chaussée d'Alsemberg 842, 1180 Uccle, Belgique
+          © 2013 – {new Date().getFullYear()} Fagou SRL · Rue des Liégeois 36, 1050 Ixelles, Belgique
         </div>
         <div className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.14em', color: 'rgba(242,247,242,0.5)', textTransform: 'uppercase' }}>
-          TVA · BE [n° à confirmer] · RPM Bruxelles
+          TVA · BE 0542.382.824 · RPM Bruxelles
         </div>
       </div>
     </footer>
