@@ -68,8 +68,8 @@ export default function About() {
         </h1>
         <p style={{ fontSize: 17, lineHeight: 1.6, color: '#6B7280', marginTop: 48, maxWidth: 640 }}>
           {t(
-            "Fagou a été fondée en 2013 par Dombeu Eugène Gabriel, autour d'une idée simple : rendre la nourriture qualitative plus accessible, partout dans le monde.",
-            'Fagou was founded in 2013 by Dombeu Eugène Gabriel around a simple idea: making quality food more accessible, anywhere in the world.'
+            "Fagou a été fondée en 2013 autour d'une idée simple : rendre la nourriture qualitative plus accessible, partout dans le monde.",
+            'Fagou was founded in 2013 around a simple idea: making quality food more accessible, anywhere in the world.'
           )}
         </p>
       </section>
@@ -113,8 +113,8 @@ export default function About() {
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 48, borderTop: '1px solid #E5E7EB', paddingTop: 48 }}>
             <p style={{ fontSize: 16, lineHeight: 1.7, color: '#6B7280', margin: 0 }}>
               {t(
-                "Fagou SRL a été créée en Belgique par Dombeu Eugène Gabriel avec pour ambition de devenir un intermédiaire de confiance dans le secteur de l'agroalimentaire international.",
-                'Fagou SRL was founded in Belgium by Dombeu Eugène Gabriel with the ambition to become a trusted intermediary in the international agri-food sector.'
+                "Fagou SRL a été créée en Belgique avec pour ambition de devenir un intermédiaire de confiance dans le secteur de l'agroalimentaire international.",
+                'Fagou SRL was founded in Belgium with the ambition to become a trusted intermediary in the international agri-food sector.'
               )}
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.7, color: '#6B7280', margin: 0 }}>
