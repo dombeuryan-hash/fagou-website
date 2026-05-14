@@ -1,24 +1,20 @@
-import { Package, ShoppingCart, MessageSquare, Users, TrendingUp, ArrowUpRight } from 'lucide-react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { useState, useEffect } from 'react'
+import { Package, MessageSquare, BookOpen, ArrowUpRight, MailOpen, Link as LinkIcon } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { getAllProducts, getAllCategories } from '../../services/productService'
 import { getAllArticles } from '../../services/newsService'
 import { useAuth } from '../../hooks/useAuth'
+import { supabase } from '../../lib/supabase'
+import { ROUTES } from '../../constants'
 
-const CHART_DATA = [
-  { month: 'Jan', commandes: 12 },
-  { month: 'Fév', commandes: 19 },
-  { month: 'Mar', commandes: 15 },
-  { month: 'Avr', commandes: 25 },
-  { month: 'Mai', commandes: 22 },
-  { month: 'Jun', commandes: 30 },
-]
-
-const RECENT_ACTIVITY = [
-  { label: 'Devis reçu — AfriCom Distribution', sub: 'Poulet entier congelé · 5 tonnes', time: 'Il y a 2h', dot: '#1A5C1A' },
-  { label: 'Nouveau message contact', sub: 'Aminata Diallo · Partenariat Sénégal', time: 'Il y a 5h', dot: '#0F3D14' },
-  { label: 'Commande expédiée — Lagos Foods', sub: 'Lait concentré · 2 conteneurs', time: 'Hier', dot: '#B7860B' },
-  { label: 'Devis reçu — Dakar Imports', sub: 'Huile de palme · 20 tonnes', time: 'Hier', dot: '#1A5C1A' },
-]
+interface RecentMessage {
+  id: string
+  name: string
+  email: string
+  country: string | null
+  read: boolean
+  created_at: string
+}
 
 interface StatCardProps {
   icon: React.ReactNode
@@ -77,23 +73,31 @@ export default function AdminDashboard() {
   const categories = getAllCategories()
   const articles = getAllArticles()
   const { user } = useAuth()
+  const [messages, setMessages] = useState<RecentMessage[]>([])
+  const [loadingMsgs, setLoadingMsgs] = useState(true)
+
+  useEffect(() => {
+    supabase
+      .from('contact_messages')
+      .select('id, name, email, country, read, created_at')
+      .order('created_at', { ascending: false })
+      .limit(20)
+      .then(({ data }) => {
+        setMessages(data ?? [])
+        setLoadingMsgs(false)
+      })
+  }, [])
+
+  const unread = messages.filter((m) => !m.read).length
+  const recent = messages.slice(0, 5)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
 
       {/* En-tête */}
       <div>
-        <span className="fg-eyebrow" style={{ display: 'block', marginBottom: '8px' }}>
-          Tableau de bord
-        </span>
-        <h1 style={{
-          fontFamily: 'var(--font-title)',
-          fontWeight: 800,
-          fontSize: '28px',
-          color: 'var(--color-text)',
-          letterSpacing: '-0.02em',
-          marginBottom: '4px',
-        }}>
+        <span className="fg-eyebrow" style={{ display: 'block', marginBottom: '8px' }}>Tableau de bord</span>
+        <h1 style={{ fontFamily: 'var(--font-title)', fontWeight: 800, fontSize: '28px', color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: '4px' }}>
           Bienvenue{user ? `, ${user.name.split(' ')[0]}` : ''}
         </h1>
         <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--color-gray)' }}>
@@ -103,107 +107,69 @@ export default function AdminDashboard() {
 
       {/* Stat cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
-        <StatCard icon={<Package size={20} />}      label="Produits catalogue"  value={products.length}   sub={`${categories.length} catégories`}  accentColor="var(--color-admin-navy)" />
-        <StatCard icon={<ShoppingCart size={20} />} label="Commandes & devis"   value={47}                sub="Ce mois-ci"                           accentColor="var(--color-primary)" />
-        <StatCard icon={<MessageSquare size={20} />} label="Messages en attente" value={3}                sub="2 non lus"                            accentColor="var(--color-accent)" />
-        <StatCard icon={<Users size={20} />}         label="Utilisateurs"        value={3}                sub="Tous actifs"                          accentColor="#B7860B" />
-        <StatCard icon={<TrendingUp size={20} />}    label="Articles publiés"    value={articles.length}  sub="Actualités"                          accentColor="var(--color-secondary)" />
+        <StatCard icon={<Package size={20} />}      label="Produits catalogue"  value={products.length}    sub={`${categories.length} catégories`}           accentColor="var(--color-admin-navy)" />
+        <StatCard icon={<MessageSquare size={20} />} label="Messages reçus"      value={loadingMsgs ? '…' : messages.length} sub="Total boîte de réception" accentColor="var(--color-primary)" />
+        <StatCard icon={<MailOpen size={20} />}      label="Non lus"             value={loadingMsgs ? '…' : unread}          sub={unread === 0 ? 'Tout est lu' : `${unread} en attente`} accentColor="var(--color-accent)" />
+        <StatCard icon={<BookOpen size={20} />}      label="Articles publiés"    value={articles.length}   sub="Actualités"                                  accentColor="var(--color-secondary)" />
       </div>
 
-      {/* Graphique + Activité récente */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '20px' }}>
-
-        {/* Graphique commandes */}
-        <div style={{
-          backgroundColor: '#FFFFFF',
-          borderRadius: 'var(--radius-lg)',
-          padding: '28px',
-          border: '1px solid var(--color-border)',
-          boxShadow: 'var(--shadow-soft)',
-        }}>
-          <div style={{ marginBottom: '24px' }}>
-            <span className="fg-eyebrow" style={{ display: 'block', marginBottom: '6px' }}>Évolution</span>
+      {/* Messages récents */}
+      <div style={{ backgroundColor: '#FFFFFF', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-soft)', overflow: 'hidden' }}>
+        <div style={{ padding: '24px 28px 20px', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <span className="fg-eyebrow" style={{ display: 'block', marginBottom: '6px' }}>Boîte de réception</span>
             <h2 style={{ fontFamily: 'var(--font-title)', fontWeight: 700, fontSize: '18px', color: 'var(--color-text)', letterSpacing: '-0.01em' }}>
-              Commandes par mois
+              Messages récents
             </h2>
           </div>
-          <ResponsiveContainer width="100%" height={240}>
-            <BarChart data={CHART_DATA} barSize={28}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
-              <XAxis
-                dataKey="month"
-                tick={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--color-gray)', letterSpacing: '0.08em' }}
-                axisLine={false}
-                tickLine={false}
-              />
-              <YAxis
-                tick={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--color-gray)' }}
-                axisLine={false}
-                tickLine={false}
-                width={28}
-              />
-              <Tooltip
-                contentStyle={{
-                  fontFamily: 'Inter, sans-serif',
-                  fontSize: '13px',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--color-border)',
-                  boxShadow: 'var(--shadow-card)',
-                }}
-                cursor={{ fill: 'var(--color-bg)' }}
-              />
-              <Bar dataKey="commandes" fill="var(--color-admin-navy)" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          <Link
+            to={ROUTES.ADMIN_MESSAGES}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-primary)', fontWeight: 500 }}
+          >
+            Voir tout <LinkIcon size={13} />
+          </Link>
         </div>
 
-        {/* Activité récente */}
-        <div style={{
-          backgroundColor: '#FFFFFF',
-          borderRadius: 'var(--radius-lg)',
-          padding: '28px',
-          border: '1px solid var(--color-border)',
-          boxShadow: 'var(--shadow-soft)',
-        }}>
-          <div style={{ marginBottom: '24px' }}>
-            <span className="fg-eyebrow" style={{ display: 'block', marginBottom: '6px' }}>En temps réel</span>
-            <h2 style={{ fontFamily: 'var(--font-title)', fontWeight: 700, fontSize: '18px', color: 'var(--color-text)', letterSpacing: '-0.01em' }}>
-              Activité récente
-            </h2>
+        {loadingMsgs ? (
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--color-gray)', fontFamily: 'var(--font-body)', fontSize: 14 }}>
+            Chargement…
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-            {RECENT_ACTIVITY.map((item, i) => (
-              <div key={i} style={{
-                display: 'flex',
-                gap: '14px',
-                paddingBottom: i < RECENT_ACTIVITY.length - 1 ? '18px' : '0',
-                marginBottom: i < RECENT_ACTIVITY.length - 1 ? '18px' : '0',
-                borderBottom: i < RECENT_ACTIVITY.length - 1 ? '1px solid var(--color-border)' : 'none',
-              }}>
-                <div style={{ paddingTop: '4px', flexShrink: 0 }}>
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: item.dot }} />
-                </div>
+        ) : recent.length === 0 ? (
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--color-gray)', fontFamily: 'var(--font-body)', fontSize: 14 }}>
+            Aucun message reçu pour le moment.
+          </div>
+        ) : (
+          <div>
+            {recent.map((msg, i) => (
+              <div
+                key={msg.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 16,
+                  padding: '14px 28px',
+                  borderBottom: i < recent.length - 1 ? '1px solid var(--color-border)' : 'none',
+                  backgroundColor: msg.read ? 'transparent' : '#F0F7F0',
+                }}
+              >
+                <div style={{ width: 7, height: 7, borderRadius: '50%', flexShrink: 0, backgroundColor: msg.read ? 'var(--color-border)' : '#1A5C1A' }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: 'var(--color-text)', marginBottom: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {item.label}
+                  <p style={{ fontFamily: 'var(--font-body)', fontWeight: msg.read ? 400 : 600, fontSize: 14, color: 'var(--color-text)', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {msg.name}
                   </p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--color-gray)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {item.sub}
-                  </p>
-                  <p className="fg-mono" style={{ fontSize: '9px', letterSpacing: '0.1em', color: 'var(--color-border)', marginTop: '4px' }}>
-                    {item.time}
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--color-gray)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {msg.email}{msg.country ? ` · ${msg.country}` : ''}
                   </p>
                 </div>
+                <p className="fg-mono" style={{ fontSize: 10, color: 'var(--color-gray)', letterSpacing: '0.08em', flexShrink: 0 }}>
+                  {new Date(msg.created_at).toLocaleDateString('fr-BE')}
+                </p>
               </div>
             ))}
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Note mock */}
-      <p className="fg-mono" style={{ fontSize: '9px', letterSpacing: '0.1em', color: 'var(--color-border)', textAlign: 'right' }}>
-        Données mock — connecter à l'API backend pour les données réelles
-      </p>
     </div>
   )
 }

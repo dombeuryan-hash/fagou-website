@@ -41,7 +41,6 @@ export const ROUTES = {
   ADMIN: '/admin',
   ADMIN_LOGIN: '/admin/login',
   ADMIN_PRODUCTS: '/admin/produits',
-  ADMIN_ORDERS: '/admin/commandes',
   ADMIN_MESSAGES: '/admin/messages',
   ADMIN_USERS: '/admin/utilisateurs',
   ADMIN_PAGES: '/admin/pages',

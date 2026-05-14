@@ -3,7 +3,6 @@ import { NavLink, Outlet, Navigate, Link } from 'react-router-dom'
 import {
   LayoutDashboard,
   Package,
-  ShoppingCart,
   MessageSquare,
   Users,
   ImageIcon,
@@ -27,7 +26,6 @@ interface AdminNavItem {
 const ADMIN_NAV_ITEMS: AdminNavItem[] = [
   { label: 'Dashboard',    path: ROUTES.ADMIN,           icon: <LayoutDashboard size={17} /> },
   { label: 'Produits',     path: ROUTES.ADMIN_PRODUCTS,  icon: <Package         size={17} /> },
-  { label: 'Commandes',    path: ROUTES.ADMIN_ORDERS,    icon: <ShoppingCart    size={17} /> },
   { label: 'Messages',     path: ROUTES.ADMIN_MESSAGES,  icon: <MessageSquare   size={17} /> },
   { label: 'Utilisateurs', path: ROUTES.ADMIN_USERS,     icon: <Users           size={17} /> },
   { label: 'Pages',        path: ROUTES.ADMIN_PAGES,     icon: <ImageIcon       size={17} /> },

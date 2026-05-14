@@ -22,7 +22,6 @@ const NotFound = lazy(() => import('./pages/NotFound'))
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
 const AdminProducts = lazy(() => import('./pages/admin/AdminProducts'))
-const AdminOrders = lazy(() => import('./pages/admin/AdminOrders'))
 const AdminMessages = lazy(() => import('./pages/admin/AdminMessages'))
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'))
 const AdminPages = lazy(() => import('./pages/admin/AdminPages'))
@@ -55,7 +54,6 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <AdminDashboard /> },
       { path: 'produits', element: <AdminProducts /> },
-      { path: 'commandes', element: <AdminOrders /> },
       { path: 'messages', element: <AdminMessages /> },
       { path: 'utilisateurs', element: <AdminUsers /> },
       { path: 'pages', element: <AdminPages /> },
