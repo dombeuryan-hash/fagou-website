@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink, Outlet, Navigate, Link } from 'react-router-dom'
 import {
   LayoutDashboard,
@@ -11,6 +11,8 @@ import {
   PanelLeftOpen,
   LogOut,
   Globe,
+  Menu,
+  X,
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { ROUTES } from '../../constants'
@@ -34,6 +36,18 @@ const ADMIN_NAV_ITEMS: AdminNavItem[] = [
 export function AdminLayout() {
   const { isAuthenticated, loading, user, logout } = useAuth()
   const [collapsed, setCollapsed] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  useEffect(() => {
+    const check = () => {
+      const mobile = window.innerWidth < 768
+      setIsMobile(mobile)
+      if (!mobile) setMobileOpen(false)
+    }
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   if (loading) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundColor: 'var(--color-bg)' }}>
@@ -44,18 +58,36 @@ export function AdminLayout() {
 
   if (!isAuthenticated) return <Navigate to={ROUTES.ADMIN_LOGIN} replace />
 
+  const showLabels = isMobile || !collapsed
+
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--color-bg)' }}>
 
+      {/* Mobile overlay */}
+      {isMobile && mobileOpen && (
+        <div
+          onClick={() => setMobileOpen(false)}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.45)', zIndex: 49 }}
+        />
+      )}
+
       {/* ── Sidebar ─────────────────────────────────────────────── */}
       <aside style={{
-        width: collapsed ? '64px' : '232px',
+        width: collapsed && !isMobile ? '64px' : '232px',
         backgroundColor: 'var(--color-admin-navy)',
-        transition: 'width var(--transition-normal)',
+        transition: 'width 300ms, transform 300ms',
         display: 'flex',
         flexDirection: 'column',
         flexShrink: 0,
         overflow: 'hidden',
+        ...(isMobile ? {
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          height: '100vh',
+          zIndex: 50,
+          transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
+        } : {}),
       }}>
 
         {/* Logo */}
@@ -63,54 +95,49 @@ export function AdminLayout() {
           minHeight: '68px',
           display: 'flex',
           alignItems: 'center',
-          padding: collapsed ? '0 16px' : '0 20px',
+          padding: showLabels ? '0 20px' : '0 16px',
           borderBottom: '1px solid rgba(255,255,255,0.08)',
           gap: '12px',
           flexShrink: 0,
+          justifyContent: 'space-between',
         }}>
-          <FagouLogo size={collapsed ? 28 : 36} dark={true} />
-          {!collapsed && (
-            <div style={{ overflow: 'hidden' }}>
-              <p className="fg-mono" style={{
-                fontSize: '9px',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.38)',
-                whiteSpace: 'nowrap',
-              }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, overflow: 'hidden' }}>
+            <FagouLogo size={showLabels ? 36 : 28} dark={true} />
+            {showLabels && (
+              <p className="fg-mono" style={{ fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)', whiteSpace: 'nowrap' }}>
                 Administration
               </p>
-            </div>
+            )}
+          </div>
+          {isMobile && (
+            <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+              <X size={18} />
+            </button>
           )}
         </div>
 
         {/* Nav section label */}
-        {!collapsed && (
-          <p className="fg-mono" style={{
-            fontSize: '9px',
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.28)',
-            padding: '20px 20px 8px',
-          }}>
+        {showLabels && (
+          <p className="fg-mono" style={{ fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)', padding: '20px 20px 8px' }}>
             Navigation
           </p>
         )}
 
         {/* Nav links */}
-        <nav style={{ flex: 1, padding: collapsed ? '16px 8px' : '4px 10px' }}>
+        <nav style={{ flex: 1, padding: !showLabels ? '16px 8px' : '4px 10px' }}>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '2px' }}>
             {ADMIN_NAV_ITEMS.map((item) => (
               <li key={item.path}>
                 <NavLink
                   to={item.path}
                   end={item.path === ROUTES.ADMIN}
-                  title={collapsed ? item.label : undefined}
+                  title={!showLabels ? item.label : undefined}
+                  onClick={() => isMobile && setMobileOpen(false)}
                   style={({ isActive }) => ({
                     display: 'flex',
                     alignItems: 'center',
                     gap: '10px',
-                    padding: collapsed ? '10px 14px' : '9px 12px',
+                    padding: !showLabels ? '10px 14px' : '9px 12px',
                     borderRadius: 'var(--radius-sm)',
                     color: isActive ? '#FFFFFF' : 'rgba(255,255,255,0.55)',
                     backgroundColor: isActive ? 'rgba(255,255,255,0.12)' : 'transparent',
@@ -123,8 +150,8 @@ export function AdminLayout() {
                     borderLeft: isActive ? '2px solid var(--color-primary)' : '2px solid transparent',
                   })}
                 >
-                  <span style={{ flexShrink: 0, opacity: 1 }}>{item.icon}</span>
-                  {!collapsed && item.label}
+                  <span style={{ flexShrink: 0 }}>{item.icon}</span>
+                  {showLabels && item.label}
                 </NavLink>
               </li>
             ))}
@@ -132,69 +159,28 @@ export function AdminLayout() {
         </nav>
 
         {/* Footer sidebar */}
-        {!collapsed && (
-          <p className="fg-mono" style={{
-            fontSize: '9px',
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.28)',
-            padding: '0 20px 8px',
-          }}>
+        {showLabels && (
+          <p className="fg-mono" style={{ fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)', padding: '0 20px 8px' }}>
             Général
           </p>
         )}
-        <div style={{
-          padding: collapsed ? '12px 8px' : '4px 10px 16px',
-          borderTop: '1px solid rgba(255,255,255,0.08)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2px',
-          marginTop: collapsed ? 'auto' : '0',
-        }}>
+        <div style={{ padding: !showLabels ? '12px 8px' : '4px 10px 16px', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', gap: '2px', marginTop: !showLabels ? 'auto' : '0' }}>
           <Link
             to={ROUTES.HOME}
-            title={collapsed ? 'Voir le site' : undefined}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              padding: collapsed ? '10px 14px' : '9px 12px',
-              borderRadius: 'var(--radius-sm)',
-              color: 'rgba(255,255,255,0.45)',
-              fontFamily: 'var(--font-body)',
-              fontSize: '13px',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              transition: 'color var(--transition-fast)',
-            }}
+            title={!showLabels ? 'Voir le site' : undefined}
+            onClick={() => isMobile && setMobileOpen(false)}
+            style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: !showLabels ? '10px 14px' : '9px 12px', borderRadius: 'var(--radius-sm)', color: 'rgba(255,255,255,0.45)', fontFamily: 'var(--font-body)', fontSize: '13px', whiteSpace: 'nowrap', overflow: 'hidden', transition: 'color var(--transition-fast)' }}
           >
             <Globe size={17} style={{ flexShrink: 0 }} />
-            {!collapsed && 'Voir le site'}
+            {showLabels && 'Voir le site'}
           </Link>
           <button
             onClick={() => logout()}
-            title={collapsed ? 'Déconnexion' : undefined}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              padding: collapsed ? '10px 14px' : '9px 12px',
-              borderRadius: 'var(--radius-sm)',
-              color: 'rgba(255,255,255,0.45)',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              fontFamily: 'var(--font-body)',
-              fontSize: '13px',
-              textAlign: 'left',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              width: '100%',
-              transition: 'color var(--transition-fast)',
-            }}
+            title={!showLabels ? 'Déconnexion' : undefined}
+            style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: !showLabels ? '10px 14px' : '9px 12px', borderRadius: 'var(--radius-sm)', color: 'rgba(255,255,255,0.45)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: '13px', textAlign: 'left', whiteSpace: 'nowrap', overflow: 'hidden', width: '100%', transition: 'color var(--transition-fast)' }}
           >
             <LogOut size={17} style={{ flexShrink: 0 }} />
-            {!collapsed && 'Déconnexion'}
+            {showLabels && 'Déconnexion'}
           </button>
         </div>
       </aside>
@@ -203,87 +189,37 @@ export function AdminLayout() {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
 
         {/* Header */}
-        <header style={{
-          backgroundColor: '#FFFFFF',
-          borderBottom: '1px solid var(--color-border)',
-          padding: '0 28px',
-          height: '68px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexShrink: 0,
-          boxShadow: 'var(--shadow-soft)',
-        }}>
+        <header style={{ backgroundColor: '#FFFFFF', borderBottom: '1px solid var(--color-border)', padding: '0 20px', height: '68px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, boxShadow: 'var(--shadow-soft)' }}>
           <button
-            onClick={() => setCollapsed((v) => !v)}
-            aria-label={collapsed ? 'Développer' : 'Réduire'}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '34px',
-              height: '34px',
-              border: '1px solid var(--color-border)',
-              borderRadius: 'var(--radius-sm)',
-              color: 'var(--color-gray)',
-              backgroundColor: 'transparent',
-              transition: 'background-color var(--transition-fast)',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-bg)')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+            onClick={() => isMobile ? setMobileOpen(v => !v) : setCollapsed(v => !v)}
+            aria-label={isMobile ? 'Menu' : (collapsed ? 'Développer' : 'Réduire')}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '34px', height: '34px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', color: 'var(--color-gray)', backgroundColor: 'transparent', cursor: 'pointer' }}
           >
-            {collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
+            {isMobile ? <Menu size={16} /> : (collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />)}
           </button>
 
-          {/* User badge */}
           {user && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ textAlign: 'right' }}>
-                <p style={{
-                  fontFamily: 'var(--font-body)',
-                  fontWeight: 600,
-                  fontSize: '13px',
-                  color: 'var(--color-text)',
-                }}>
-                  {user.name}
-                </p>
-                <p className="fg-mono" style={{
-                  fontSize: '9px',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-gray)',
-                }}>
-                  {user.role}
-                </p>
-              </div>
-              <div style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                backgroundColor: 'var(--color-admin-navy)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}>
-                <span style={{
-                  fontFamily: 'var(--font-title)',
-                  fontWeight: 800,
-                  fontSize: '14px',
-                  color: '#FFFFFF',
-                }}>
-                  {user.name[0]}
-                </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              {!isMobile && (
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', color: 'var(--color-text)', margin: 0 }}>{user.name}</p>
+                  <p className="fg-mono" style={{ fontSize: '9px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--color-gray)', margin: 0 }}>{user.role}</p>
+                </div>
+              )}
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: 'var(--color-admin-navy)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <span style={{ fontFamily: 'var(--font-title)', fontWeight: 800, fontSize: '14px', color: '#FFFFFF' }}>{user.name[0]}</span>
               </div>
             </div>
           )}
         </header>
 
         {/* Contenu */}
-        <main style={{ flex: 1, padding: '32px', overflowY: 'auto' }}>
+        <main style={{ flex: 1, padding: isMobile ? '20px 16px' : '32px', overflowY: 'auto' }}>
           <Outlet />
         </main>
       </div>
+
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 }
