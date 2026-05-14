@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Footer } from './Footer'
 import { CookieBanner } from '../common/CookieBanner'
+import { ScrollToTop } from '../common/ScrollToTop'
 
 function PageLoader() {
   return (
@@ -24,6 +25,7 @@ function PageLoader() {
 export function Layout() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#FAFAF8' }}>
+      <ScrollToTop />
       <main style={{ flex: 1 }}>
         <Suspense fallback={<PageLoader />}>
           <Outlet />
