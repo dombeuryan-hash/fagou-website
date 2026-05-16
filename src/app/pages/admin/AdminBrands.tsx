@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Plus, Pencil, Trash2, X, ImageIcon, Loader2 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { ImagePicker } from '../../components/admin/ImagePicker'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 interface Brand {
   id: string
@@ -24,6 +25,7 @@ const EMPTY: Omit<Brand, 'id'> = {
 }
 
 export default function AdminBrands() {
+  const isMobile = useIsMobile()
   const [brands, setBrands] = useState<Brand[]>([])
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
@@ -96,17 +98,36 @@ export default function AdminBrands() {
   }
 
   return (
-    <div style={{ padding: '32px 24px', maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ padding: isMobile ? '24px 16px' : '32px 24px', maxWidth: 1100, margin: '0 auto' }}>
 
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+        justifyContent: 'space-between',
+        alignItems: isMobile ? 'flex-start' : 'center',
+        gap: isMobile ? 16 : 0,
+        marginBottom: 32,
+      }}>
         <div>
-          <h1 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 800, fontSize: 24, margin: 0 }}>Marques</h1>
+          <h1 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 800, fontSize: isMobile ? 20 : 24, margin: 0 }}>Marques</h1>
           <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#6B7280', margin: '4px 0 0' }}>
             {brands.length} marque{brands.length > 1 ? 's' : ''} distribuée{brands.length > 1 ? 's' : ''}
           </p>
         </div>
-        <button onClick={openAdd} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 18px', backgroundColor: '#1A5C1A', color: '#FFFFFF', border: 'none', borderRadius: 8, fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
+        <button
+          onClick={openAdd}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '10px 18px',
+            backgroundColor: '#1A5C1A', color: '#FFFFFF',
+            border: 'none', borderRadius: 8,
+            fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 14,
+            cursor: 'pointer',
+            width: isMobile ? '100%' : 'auto',
+            justifyContent: isMobile ? 'center' : 'flex-start',
+          }}
+        >
           <Plus size={16} /> Ajouter une marque
         </button>
       </div>
@@ -120,32 +141,79 @@ export default function AdminBrands() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {brands.map(b => (
-            <div key={b.id} style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: 12, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div
+              key={b.id}
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #E5E7EB',
+                borderRadius: 12,
+                padding: isMobile ? '14px 14px' : '16px 20px',
+                display: 'flex',
+                alignItems: isMobile ? 'flex-start' : 'center',
+                gap: isMobile ? 12 : 16,
+              }}
+            >
               {/* Logo preview */}
-              <div style={{ width: 80, height: 60, flexShrink: 0, backgroundColor: '#FAFAF8', borderRadius: 8, border: '1px solid #E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+              <div style={{
+                width: isMobile ? 60 : 80,
+                height: isMobile ? 48 : 60,
+                flexShrink: 0,
+                backgroundColor: '#FAFAF8',
+                borderRadius: 8,
+                border: '1px solid #E5E7EB',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+              }}>
                 {b.logo
                   ? <img src={b.logo} alt={b.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-                  : <ImageIcon size={20} color="#D1D5DB" />
+                  : <ImageIcon size={18} color="#D1D5DB" />
                 }
               </div>
-              {/* Info */}
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: 16 }}>{b.name}</div>
-                <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#6B7280', marginTop: 2 }}>{b.tag_fr}</div>
-                {b.desc_fr && (
-                  <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#9CA3AF', marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {b.desc_fr}
-                  </div>
-                )}
-              </div>
-              {/* Actions */}
-              <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                <button onClick={() => openEdit(b)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', border: '1px solid #E5E7EB', borderRadius: 8, backgroundColor: '#FFFFFF', fontFamily: 'Inter, sans-serif', fontSize: 13, cursor: 'pointer', color: '#374151' }}>
-                  <Pencil size={14} /> Modifier
-                </button>
-                <button onClick={() => setDeleteTarget(b)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', border: '1px solid #FEE2E2', borderRadius: 8, backgroundColor: '#FFF5F5', fontFamily: 'Inter, sans-serif', fontSize: 13, cursor: 'pointer', color: '#DC2626' }}>
-                  <Trash2 size={14} />
-                </button>
+
+              {/* Info + actions */}
+              <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 10 : 16 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: isMobile ? 14 : 16 }}>{b.name}</div>
+                  <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#6B7280', marginTop: 2 }}>{b.tag_fr}</div>
+                  {!isMobile && b.desc_fr && (
+                    <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#9CA3AF', marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {b.desc_fr}
+                    </div>
+                  )}
+                </div>
+
+                {/* Actions */}
+                <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                  <button
+                    onClick={() => openEdit(b)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 6,
+                      padding: isMobile ? '7px 12px' : '8px 14px',
+                      border: '1px solid #E5E7EB', borderRadius: 8,
+                      backgroundColor: '#FFFFFF',
+                      fontFamily: 'Inter, sans-serif', fontSize: 13,
+                      cursor: 'pointer', color: '#374151',
+                    }}
+                  >
+                    <Pencil size={14} />
+                    {!isMobile && 'Modifier'}
+                  </button>
+                  <button
+                    onClick={() => setDeleteTarget(b)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 6,
+                      padding: isMobile ? '7px 12px' : '8px 14px',
+                      border: '1px solid #FEE2E2', borderRadius: 8,
+                      backgroundColor: '#FFF5F5',
+                      fontFamily: 'Inter, sans-serif', fontSize: 13,
+                      cursor: 'pointer', color: '#DC2626',
+                    }}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -154,12 +222,20 @@ export default function AdminBrands() {
 
       {/* ── Modal édition ─────────────────────────────────────── */}
       {modalOpen && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-          <div style={{ backgroundColor: '#FFFFFF', borderRadius: 14, width: '100%', maxWidth: 640, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 24px 64px rgba(0,0,0,0.2)' }}>
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent: 'center', padding: isMobile ? 0 : 24 }}>
+          <div style={{
+            backgroundColor: '#FFFFFF',
+            borderRadius: isMobile ? '14px 14px 0 0' : 14,
+            width: '100%',
+            maxWidth: isMobile ? '100%' : 640,
+            maxHeight: isMobile ? '92vh' : '90vh',
+            overflowY: 'auto',
+            boxShadow: '0 24px 64px rgba(0,0,0,0.2)',
+          }}>
 
             {/* Modal header */}
-            <div style={{ padding: '20px 24px', borderBottom: '1px solid #E5E7EB', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, backgroundColor: '#FFFFFF', zIndex: 1 }}>
-              <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: 18, margin: 0 }}>
+            <div style={{ padding: '20px 20px', borderBottom: '1px solid #E5E7EB', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, backgroundColor: '#FFFFFF', zIndex: 1 }}>
+              <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: isMobile ? 16 : 18, margin: 0 }}>
                 {editing ? 'Modifier la marque' : 'Nouvelle marque'}
               </h2>
               <button onClick={closeModal} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#6B7280', padding: 4 }}>
@@ -168,16 +244,16 @@ export default function AdminBrands() {
             </div>
 
             {/* Modal body */}
-            <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div style={{ padding: isMobile ? 16 : 24, display: 'flex', flexDirection: 'column', gap: 18 }}>
 
               {/* Logo */}
               <div>
                 <label style={labelStyle}>Logo</label>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                  <div style={{ width: 100, height: 72, backgroundColor: '#FAFAF8', borderRadius: 8, border: '1px solid #E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
+                  <div style={{ width: 88, height: 64, backgroundColor: '#FAFAF8', borderRadius: 8, border: '1px solid #E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
                     {form.logo
                       ? <img src={form.logo} alt="" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-                      : <ImageIcon size={24} color="#D1D5DB" />
+                      : <ImageIcon size={22} color="#D1D5DB" />
                     }
                   </div>
                   <button onClick={() => setPickerOpen(true)} style={{ padding: '9px 16px', border: '1px solid #E5E7EB', borderRadius: 8, backgroundColor: '#F9FAFB', fontFamily: 'Inter, sans-serif', fontSize: 13, cursor: 'pointer', color: '#374151' }}>
@@ -193,7 +269,7 @@ export default function AdminBrands() {
               </div>
 
               {/* Tags */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={labelStyle}>Tag FR</label>
                   <input value={form.tag_fr} onChange={e => setField('tag_fr', e.target.value)} style={inputStyle} placeholder="ex. Mayonnaise" />
@@ -219,7 +295,7 @@ export default function AdminBrands() {
               {/* Produits */}
               <div>
                 <label style={labelStyle}>Produits (séparés par des virgules)</label>
-                <input value={productsText} onChange={e => setProductsText(e.target.value)} style={inputStyle} placeholder="ex. Mayonnaise, Mayonnaise ail, Mayonnaise oignon" />
+                <input value={productsText} onChange={e => setProductsText(e.target.value)} style={inputStyle} placeholder="ex. Mayonnaise, Mayonnaise ail" />
               </div>
 
               {/* Taille logo */}
@@ -247,11 +323,11 @@ export default function AdminBrands() {
             </div>
 
             {/* Modal footer */}
-            <div style={{ padding: '16px 24px', borderTop: '1px solid #E5E7EB', display: 'flex', justifyContent: 'flex-end', gap: 10, position: 'sticky', bottom: 0, backgroundColor: '#FFFFFF' }}>
-              <button onClick={closeModal} style={{ padding: '10px 18px', border: '1px solid #E5E7EB', borderRadius: 8, fontFamily: 'Inter, sans-serif', fontSize: 14, cursor: 'pointer', backgroundColor: '#FFFFFF', color: '#374151' }}>
+            <div style={{ padding: '16px 20px', borderTop: '1px solid #E5E7EB', display: 'flex', justifyContent: 'flex-end', gap: 10, position: 'sticky', bottom: 0, backgroundColor: '#FFFFFF' }}>
+              <button onClick={closeModal} style={{ flex: isMobile ? 1 : 'unset', padding: '10px 18px', border: '1px solid #E5E7EB', borderRadius: 8, fontFamily: 'Inter, sans-serif', fontSize: 14, cursor: 'pointer', backgroundColor: '#FFFFFF', color: '#374151' }}>
                 Annuler
               </button>
-              <button onClick={handleSave} disabled={saving} style={{ padding: '10px 20px', border: 'none', borderRadius: 8, fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 14, cursor: saving ? 'not-allowed' : 'pointer', backgroundColor: saving ? '#9CA3AF' : '#1A5C1A', color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={handleSave} disabled={saving} style={{ flex: isMobile ? 1 : 'unset', padding: '10px 20px', border: 'none', borderRadius: 8, fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 14, cursor: saving ? 'not-allowed' : 'pointer', backgroundColor: saving ? '#9CA3AF' : '#1A5C1A', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                 {saving && <Loader2 size={14} style={{ animation: 'spin 0.7s linear infinite' }} />}
                 {saving ? 'Enregistrement…' : 'Enregistrer'}
               </button>
@@ -262,15 +338,26 @@ export default function AdminBrands() {
 
       {/* ── Modal suppression ─────────────────────────────────── */}
       {deleteTarget && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-          <div style={{ backgroundColor: '#FFFFFF', borderRadius: 14, padding: 28, maxWidth: 420, width: '100%', boxShadow: '0 24px 64px rgba(0,0,0,0.2)' }}>
-            <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: 18, marginBottom: 12 }}>Supprimer "{deleteTarget.name}" ?</h2>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#6B7280', marginBottom: 24 }}>Cette action est irréversible.</p>
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent: 'center', padding: isMobile ? 0 : 24 }}>
+          <div style={{
+            backgroundColor: '#FFFFFF',
+            borderRadius: isMobile ? '14px 14px 0 0' : 14,
+            padding: isMobile ? '24px 20px 32px' : 28,
+            maxWidth: isMobile ? '100%' : 420,
+            width: '100%',
+            boxShadow: '0 24px 64px rgba(0,0,0,0.2)',
+          }}>
+            <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: isMobile ? 16 : 18, marginBottom: 12 }}>
+              Supprimer "{deleteTarget.name}" ?
+            </h2>
+            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#6B7280', marginBottom: 24 }}>
+              Cette action est irréversible.
+            </p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
-              <button onClick={() => setDeleteTarget(null)} style={{ padding: '10px 18px', border: '1px solid #E5E7EB', borderRadius: 8, fontFamily: 'Inter, sans-serif', fontSize: 14, cursor: 'pointer', backgroundColor: '#FFFFFF' }}>
+              <button onClick={() => setDeleteTarget(null)} style={{ flex: isMobile ? 1 : 'unset', padding: '10px 18px', border: '1px solid #E5E7EB', borderRadius: 8, fontFamily: 'Inter, sans-serif', fontSize: 14, cursor: 'pointer', backgroundColor: '#FFFFFF' }}>
                 Annuler
               </button>
-              <button onClick={handleDelete} disabled={deleting} style={{ padding: '10px 18px', border: 'none', borderRadius: 8, fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 14, cursor: deleting ? 'not-allowed' : 'pointer', backgroundColor: '#DC2626', color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={handleDelete} disabled={deleting} style={{ flex: isMobile ? 1 : 'unset', padding: '10px 18px', border: 'none', borderRadius: 8, fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 14, cursor: deleting ? 'not-allowed' : 'pointer', backgroundColor: '#DC2626', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                 {deleting && <Loader2 size={14} style={{ animation: 'spin 0.7s linear infinite' }} />}
                 {deleting ? 'Suppression…' : 'Supprimer'}
               </button>
