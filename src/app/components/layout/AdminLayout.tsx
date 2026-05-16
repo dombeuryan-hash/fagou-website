@@ -6,6 +6,7 @@ import {
   MessageSquare,
   Users,
   ImageIcon,
+  Tag,
   PanelLeftClose,
   PanelLeftOpen,
   LogOut,
@@ -27,6 +28,7 @@ const ADMIN_NAV_ITEMS: AdminNavItem[] = [
   { label: 'Dashboard',    path: ROUTES.ADMIN,           icon: <LayoutDashboard size={17} /> },
   { label: 'Produits',     path: ROUTES.ADMIN_PRODUCTS,  icon: <Package         size={17} /> },
   { label: 'Messages',     path: ROUTES.ADMIN_MESSAGES,  icon: <MessageSquare   size={17} /> },
+  { label: 'Marques',      path: ROUTES.ADMIN_BRANDS,    icon: <Tag             size={17} /> },
   { label: 'Utilisateurs', path: ROUTES.ADMIN_USERS,     icon: <Users           size={17} /> },
   { label: 'Pages',        path: ROUTES.ADMIN_PAGES,     icon: <ImageIcon       size={17} /> },
 ]

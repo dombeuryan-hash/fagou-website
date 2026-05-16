@@ -11,6 +11,7 @@ interface NavProps {
 const NAV_ITEMS = [
   { labelFr: 'Maison', labelEn: 'House', path: ROUTES.HOME },
   { labelFr: 'Catalogue', labelEn: 'Catalogue', path: ROUTES.PRODUCTS },
+  { labelFr: 'Marques', labelEn: 'Brands', path: ROUTES.BRANDS },
   { labelFr: 'Chambre froide', labelEn: 'Cold storage', path: ROUTES.COLD },
   { labelFr: 'À propos', labelEn: 'About', path: ROUTES.ABOUT },
   { labelFr: 'Conditions', labelEn: 'Terms', path: ROUTES.TERMS },

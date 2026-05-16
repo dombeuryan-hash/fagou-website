@@ -18,6 +18,8 @@ const Privacy = lazy(() => import('./pages/Privacy'))
 const Terms = lazy(() => import('./pages/Terms'))
 const Cookies = lazy(() => import('./pages/Cookies'))
 const ColdStorage = lazy(() => import('./pages/ColdStorage'))
+const Brands = lazy(() => import('./pages/Brands'))
+const AdminBrands = lazy(() => import('./pages/admin/AdminBrands'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
@@ -40,6 +42,7 @@ export const router = createBrowserRouter([
       { path: ROUTES.NEWS_DETAIL, element: <NewsDetail /> },
       { path: ROUTES.CONTACT, element: <Contact /> },
       { path: ROUTES.COLD, element: <ColdStorage /> },
+      { path: ROUTES.BRANDS, element: <Brands /> },
       { path: ROUTES.LEGAL, element: <Legal /> },
       { path: ROUTES.PRIVACY, element: <Privacy /> },
       { path: ROUTES.TERMS, element: <Terms /> },
@@ -57,6 +60,7 @@ export const router = createBrowserRouter([
       { path: 'messages', element: <AdminMessages /> },
       { path: 'utilisateurs', element: <AdminUsers /> },
       { path: 'pages', element: <AdminPages /> },
+      { path: 'marques', element: <AdminBrands /> },
     ],
   },
 ])

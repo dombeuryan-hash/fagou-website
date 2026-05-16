@@ -39,6 +39,8 @@ export const ROUTES = {
   TERMS: '/cgv',
   COOKIES: '/cookies',
   COLD: '/chambre-froide',
+  BRANDS: '/marques',
+  ADMIN_BRANDS: '/admin/marques',
   ADMIN: '/admin',
   ADMIN_LOGIN: '/admin/login',
   ADMIN_PRODUCTS: '/admin/produits',

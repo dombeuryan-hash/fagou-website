@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Nav } from '../components/layout/Nav'
 import { useLanguage } from '../hooks/useLanguage'
@@ -6,6 +6,9 @@ import { useIsMobile } from '../hooks/useIsMobile'
 import { ROUTES } from '../constants'
 import { useCatalogue } from '../hooks/useCatalogue'
 import { useSiteSettings } from '../hooks/useSiteSettings'
+import { supabase } from '../lib/supabase'
+
+interface Brand { id: string; name: string; logo: string; logo_max_height: string; logo_max_width: string; sort_order: number }
 
 const FALLBACK_CARGO = 'https://images.unsplash.com/photo-1494412651409-8963ce7935a7?w=1920&q=80'
 const FALLBACK_VOLAILLE = 'assets/product-volaille.png'
@@ -84,6 +87,13 @@ export default function Home() {
   const { departments } = useCatalogue()
   const { settings } = useSiteSettings()
   const isMobile = useIsMobile()
+  const [brands, setBrands] = useState<Brand[]>([])
+
+  useEffect(() => {
+    supabase.from('brands').select('id, name, logo, logo_max_height, logo_max_width, sort_order').order('sort_order').then(({ data }) => {
+      setBrands((data ?? []) as Brand[])
+    })
+  }, [])
 
   const heroCargo = settings['home_hero_cargo'] || FALLBACK_CARGO
   const photoVolaille = settings['home_photo_1'] || FALLBACK_VOLAILLE
@@ -317,6 +327,62 @@ export default function Home() {
                 </span>
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* ── BRANDS TEASER ── */}
+      <section style={{ padding: `${isMobile ? 56 : 96}px ${px}px`, background: '#FAFAF8', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 64, alignItems: 'center' }}>
+          <div>
+            <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Marques distribuées', 'Distributed brands')}</div>
+            <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 3.5vw, 56px)', margin: '0 0 20px', fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
+              {t('Des marques', 'Brands we')}{' '}
+              <span style={{ fontStyle: 'italic', color: '#6B7280' }}>{t('que nous distribuons.', 'proudly distribute.')}</span>
+            </h2>
+            <p style={{ fontSize: 15, lineHeight: 1.65, color: '#6B7280', margin: '0 0 32px', maxWidth: 420 }}>
+              {t(
+                'FAGOU distribue une sélection de marques agro-alimentaires reconnues sur les marchés africains. Mayonnaise, condiments, produits secs — des références que vos clients connaissent.',
+                'FAGOU distributes a selection of agri-food brands recognised across African markets. Mayonnaise, condiments, dry goods — references your customers already know.'
+              )}
+            </p>
+            <Link to={ROUTES.BRANDS} className="btn-primary">
+              {t('Découvrir les marques', 'Discover the brands')} →
+            </Link>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
+            {brands.map((brand) => (
+              <Link
+                key={brand.id}
+                to={ROUTES.BRANDS}
+                style={{
+                  background: '#fff',
+                  border: '1px solid #E5E7EB',
+                  borderRadius: 8,
+                  padding: '28px 20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                  minHeight: 110,
+                }}
+              >
+                {brand.logo ? (
+                  <img
+                    src={brand.logo}
+                    alt={brand.name}
+                    style={{
+                      maxHeight: brand.logo_max_height || '80px',
+                      maxWidth: brand.logo_max_width || '160px',
+                      objectFit: 'contain',
+                      display: 'block',
+                    }}
+                  />
+                ) : (
+                  <span className="fg-fr" style={{ fontSize: 22, fontWeight: 400, color: '#1A1A1A', letterSpacing: '-0.02em' }}>{brand.name}</span>
+                )}
+              </Link>
+            ))}
           </div>
         </div>
       </section>
