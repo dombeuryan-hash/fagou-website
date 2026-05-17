@@ -103,7 +103,7 @@ export default function Home() {
 
   const stats = [
     { value: '2013', label: t('fondée à Bruxelles', 'founded in Brussels'), sub: t('siège social · Uccle', 'head office · Uccle') },
-    { value: '4', label: t('départements', 'departments'), sub: t('congelé · agri · intrants · PKO', 'frozen · agri · inputs · PKO') },
+    { value: '5', label: t('départements', 'departments'), sub: t('congelé · agri · intrants · PKO', 'frozen · agri · inputs · PKO') },
     { value: t('Monde', 'Worldwide'), label: t('pays desservis', 'countries served'), sub: t('export multi-incoterms', 'multi-incoterm export') },
     { value: '48 h', label: t('délai de cotation', 'quotation lead time'), sub: t('du brief au prix indicatif', 'from brief to indicative price') },
   ]
@@ -136,8 +136,8 @@ export default function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 64, marginTop: isMobile ? 40 : 72, alignItems: 'end', paddingBottom: isMobile ? 48 : 80 }}>
           <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.55, color: 'rgba(255,255,255,0.72)', margin: 0, maxWidth: 480 }}>
             {t(
-              'Fagou achète, agrège et expédie. Quatre départements, un seul interlocuteur, des cotations sous 48 heures, vers le monde entier.',
-              'Fagou sources, aggregates and ships. Four departments, one direct contact, quotations within 48 hours, worldwide.'
+              'Fagou achète, agrège et expédie. Cinq départements, un seul interlocuteur, des cotations sous 48 heures, vers le monde entier.',
+              'Fagou sources, aggregates and ships. Five departments, one direct contact, quotations within 48 hours, worldwide.'
             )}
           </p>
           <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
@@ -191,15 +191,15 @@ export default function Home() {
           <div>
             <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Catalogue', 'Catalogue')}</div>
             <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 4vw, 64px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
-              {t('Quatre départements,', 'Four departments,')}{' '}
+              {t('Cinq départements,', 'Five departments,')}{' '}
               <span style={{ fontStyle: 'italic', color: '#6B7280' }}>{t('une seule maison.', 'one house.')}</span>
             </h2>
           </div>
           <div style={{ marginBottom: 8 }}>
             <p style={{ fontSize: 16, lineHeight: 1.55, color: '#6B7280', margin: 0 }}>
               {t(
-                'Du carton de 25 kg au flexitank, nous opérons sur quatre lignes complémentaires.',
-                'From the 25 kg case to the flexitank, we operate four complementary lines.'
+                'Du carton de 25 kg au flexitank, nous opérons sur cinq lignes complémentaires.',
+                'From the 25 kg case to the flexitank, we operate five complementary lines.'
               )}
             </p>
             <a href="catalogue_fagou.pdf" download className="btn-ghost" style={{ marginTop: 20, display: 'inline-flex' }}>
@@ -211,7 +211,7 @@ export default function Home() {
           {departments.map((d) => (
             <Link
               key={d.id}
-              to={ROUTES.PRODUCTS}
+              to={`${ROUTES.PRODUCTS}?dept=${d.id}`}
               className="fg-card"
               style={{ background: '#fff', border: '1px solid #E5E7EB', borderRadius: 10, overflow: 'hidden', textDecoration: 'none', color: 'inherit', display: 'block' }}
             >

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Nav } from '../components/layout/Nav'
 import { useLanguage } from '../hooks/useLanguage'
 import { useIsMobile } from '../hooks/useIsMobile'
@@ -63,7 +63,8 @@ export default function Products() {
   const { t, language } = useLanguage()
   const { departments, allProducts, loading } = useCatalogue()
   const isMobile = useIsMobile()
-  const [deptFilter, setDeptFilter] = useState('all')
+  const [searchParams] = useSearchParams()
+  const [deptFilter, setDeptFilter] = useState(() => searchParams.get('dept') ?? 'all')
   const [view, setView] = useState<'grid' | 'list'>('grid')
 
   const filtered = deptFilter === 'all' ? allProducts : allProducts.filter((p) => p.dept === deptFilter)
@@ -83,8 +84,8 @@ export default function Products() {
           </h1>
           <p style={{ fontSize: 17, lineHeight: 1.55, color: '#6B7280', margin: 0, maxWidth: 420 }}>
             {t(
-              "Quatre départements, une vingtaine de références principales. Filtrer par département ; demander une cotation sur n'importe quelle ligne.",
-              "Four departments, around twenty main references. Filter by department; request a quote on any line."
+              "Cinq départements, une vingtaine de références principales. Filtrer par département ; demander une cotation sur n'importe quelle ligne.",
+              "Five departments, around twenty main references. Filter by department; request a quote on any line."
             )}
           </p>
         </div>
