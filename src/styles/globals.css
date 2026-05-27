@@ -126,3 +126,146 @@ button {
 @media (min-width: 1025px) {
   .fg-mobile-only { display: none !important; }
 }
+
+/* ── Scroll reveal ──────────────────────────────────────────── */
+.sr {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sr-visible { opacity: 1; transform: translateY(0); }
+
+.sr-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sr-left.sr-visible { opacity: 1; transform: translateX(0); }
+
+.sr-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sr-right.sr-visible { opacity: 1; transform: translateX(0); }
+
+.sr-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sr-scale.sr-visible { opacity: 1; transform: scale(1); }
+
+.sr-d1 { transition-delay: 80ms; }
+.sr-d2 { transition-delay: 160ms; }
+.sr-d3 { transition-delay: 240ms; }
+.sr-d4 { transition-delay: 320ms; }
+.sr-d5 { transition-delay: 400ms; }
+
+/* ── Keyframe animations ────────────────────────────────────── */
+@keyframes fg-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-10px) rotate(1deg); }
+  66%       { transform: translateY(-5px) rotate(-0.5deg); }
+}
+
+@keyframes fg-pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+@keyframes fg-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes fg-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fg-slide-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fg-spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes fg-draw-line {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+@keyframes fg-count {
+  from { opacity: 0; transform: translateY(20px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Utility animation classes ──────────────────────────────── */
+.fg-float { animation: fg-float 7s ease-in-out infinite; }
+.fg-float-slow { animation: fg-float 11s ease-in-out infinite; }
+.fg-fade-in { animation: fg-fade-in 600ms ease forwards; }
+.fg-slide-up { animation: fg-slide-up 600ms cubic-bezier(0.22,1,0.36,1) forwards; }
+.fg-spin-slow { animation: fg-spin-slow 18s linear infinite; }
+
+/* ── Card 3D enhanced hover ─────────────────────────────────── */
+.fg-card-3d {
+  transition: box-shadow 300ms ease;
+}
+.fg-card-3d:hover {
+  box-shadow: 0 24px 64px rgba(15,61,20,0.12), 0 4px 16px rgba(15,61,20,0.06);
+}
+
+/* ── Stat counter animation ─────────────────────────────────── */
+.fg-stat { animation: fg-count 600ms cubic-bezier(0.22,1,0.36,1) both; }
+.fg-stat-d1 { animation-delay: 50ms; }
+.fg-stat-d2 { animation-delay: 150ms; }
+.fg-stat-d3 { animation-delay: 250ms; }
+.fg-stat-d4 { animation-delay: 350ms; }
+
+/* ── Hero gradient animated border ─────────────────────────── */
+.fg-gradient-text {
+  background: linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.5) 50%, #ffffff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fg-shimmer 4s linear infinite;
+}
+
+/* ── Dot pulse ──────────────────────────────────────────────── */
+.fg-dot-pulse {
+  position: relative;
+}
+.fg-dot-pulse::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  animation: fg-pulse-ring 2s ease-out infinite;
+}
+
+/* ── Underline reveal ───────────────────────────────────────── */
+.fg-underline-reveal {
+  position: relative;
+  display: inline-block;
+}
+.fg-underline-reveal::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  height: 1px;
+  width: 0;
+  background: currentColor;
+  transition: width 400ms cubic-bezier(0.22,1,0.36,1);
+}
+.fg-underline-reveal:hover::after { width: 100%; }

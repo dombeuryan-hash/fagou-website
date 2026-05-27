@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Nav } from '../components/layout/Nav'
 import { useLanguage } from '../hooks/useLanguage'
@@ -7,8 +7,23 @@ import { ROUTES } from '../constants'
 import { useCatalogue } from '../hooks/useCatalogue'
 import { useSiteSettings } from '../hooks/useSiteSettings'
 import { supabase } from '../lib/supabase'
+import { TiltCard } from '../components/common/TiltCard'
 
 interface Brand { id: string; name: string; logo: string; logo_max_height: string; logo_max_width: string; sort_order: number }
+
+function useReveal(threshold = 0.1) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { el.classList.add('sr-visible'); obs.disconnect() }
+    }, { threshold })
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [threshold])
+  return ref
+}
 
 const FALLBACK_CARGO = 'https://images.unsplash.com/photo-1494412651409-8963ce7935a7?w=1920&q=80'
 const FALLBACK_VOLAILLE = 'assets/product-volaille.png'
@@ -102,8 +117,8 @@ export default function Home() {
   const coldStoragePhoto   = settings['coldstorage_hero'] || undefined
 
   const stats = [
-    { value: '2013', label: t('fondée à Bruxelles', 'founded in Brussels'), sub: t('siège social · Uccle', 'head office · Uccle') },
-    { value: '5', label: t('départements', 'departments'), sub: t('congelé · agri · intrants · PKO', 'frozen · agri · inputs · PKO') },
+    { value: '2013', label: t('fondée à Bruxelles', 'founded in Brussels'), sub: t('siège social · Rhode-Saint-Genèse', 'head office · Rhode-Saint-Genèse') },
+    { value: '5', label: t('départements', 'departments'), sub: t('congelé · agro · intrants · PKO', 'frozen · agro · inputs · PKO') },
     { value: t('Monde', 'Worldwide'), label: t('pays desservis', 'countries served'), sub: t('export multi-incoterms', 'multi-incoterm export') },
     { value: '48 h', label: t('délai de cotation', 'quotation lead time'), sub: t('du brief au prix indicatif', 'from brief to indicative price') },
   ]
@@ -116,60 +131,87 @@ export default function Home() {
 
   const px = isMobile ? 20 : 64
 
+  const refStats    = useReveal(0.15)
+  const refDepts    = useReveal(0.08)
+  const refCold     = useReveal(0.1)
+  const refBrands   = useReveal(0.1)
+  const refProcess  = useReveal(0.1)
+  const refPhotos   = useReveal(0.1)
+  const refCta      = useReveal(0.1)
+
   return (
-    <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
+    <div style={{ position: 'relative', backgroundColor: '#FAFAF8', overflowX: 'hidden' }}>
       <Nav dark />
 
       {/* ── HERO ── */}
-      <section style={{ background: '#0F3D14', color: '#fff', padding: `${isMobile ? 120 : 220}px ${px}px 0`, position: 'relative' }}>
-        <div className="fg-eyebrow dark">↗ 01 / 06 · {t('Maison', 'House')}</div>
-        <h1
-          className="fg-fr"
-          style={{ fontSize: 'clamp(48px, 10vw, 144px)', margin: '40px 0 0', fontWeight: 400, color: '#fff', maxWidth: 1180, letterSpacing: '-0.04em', lineHeight: 0.92 }}
-        >
-          {t('Négoce', 'Agri-food')}{' '}
-          <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.55)' }}>
-            {t('agro-alimentaire,', 'trading,')}
-          </span>{' '}
-          {t('depuis Bruxelles', 'out of Brussels')}
-        </h1>
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 64, marginTop: isMobile ? 40 : 72, alignItems: 'end', paddingBottom: isMobile ? 48 : 80 }}>
-          <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.55, color: 'rgba(255,255,255,0.72)', margin: 0, maxWidth: 480 }}>
-            {t(
-              'Fagou achète, agrège et expédie. Cinq départements, un seul interlocuteur, des cotations sous 48 heures, vers le monde entier.',
-              'Fagou sources, aggregates and ships. Five departments, one direct contact, quotations within 48 hours, worldwide.'
-            )}
-          </p>
-          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-            <Link to={ROUTES.PRODUCTS} className="btn-light">{t('Catalogue', 'Catalogue')} →</Link>
-            <a href="catalogue_fagou.pdf" download className="btn-ghost dark">{t('Télécharger le catalogue (PDF)', 'Download catalogue (PDF)')}</a>
+      <section style={{ background: '#0F3D14', color: '#fff', padding: `${isMobile ? 120 : 220}px ${px}px 0`, position: 'relative', overflow: 'hidden' }}>
+        {/* Decorative floating orbs */}
+        <div className="fg-float-slow" style={{ position: 'absolute', top: '15%', right: isMobile ? '-10%' : '8%', width: isMobile ? 180 : 320, height: isMobile ? 180 : 320, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div className="fg-float" style={{ position: 'absolute', top: '40%', right: isMobile ? '5%' : '22%', width: isMobile ? 80 : 140, height: isMobile ? 80 : 140, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.06)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundImage: 'radial-gradient(circle at 70% 50%, rgba(255,255,255,0.02) 0%, transparent 60%)', pointerEvents: 'none' }} />
+
+        <div className="fg-slide-up" style={{ position: 'relative', zIndex: 1 }}>
+          <div className="fg-eyebrow dark" style={{ animationDelay: '100ms' }}>↗ 01 / 06 · {t('Maison', 'House')}</div>
+          {/* FAGOU brand name prominently above headline */}
+          <div className="fg-mono" style={{ fontSize: isMobile ? 11 : 13, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', marginTop: 28, marginBottom: 16 }}>
+            FAGOU SRL · {t('Bruxelles, Belgique', 'Brussels, Belgium')}
+          </div>
+          <h1
+            className="fg-fr"
+            style={{ fontSize: 'clamp(48px, 10vw, 144px)', margin: 0, fontWeight: 400, color: '#fff', maxWidth: 1180, letterSpacing: '-0.04em', lineHeight: 0.92 }}
+          >
+            {t('Négoce', 'Agri-food')}{' '}
+            <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.45)' }}>
+              {t('agro-alimentaire,', 'trading,')}
+            </span>{' '}
+            {t('depuis Bruxelles', 'out of Brussels')}
+          </h1>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 64, marginTop: isMobile ? 40 : 72, alignItems: 'end', paddingBottom: isMobile ? 48 : 80 }}>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.6, color: 'rgba(255,255,255,0.65)', margin: 0, maxWidth: 480 }}>
+              {t(
+                'Fagou achète, agrège et expédie. Cinq départements, un seul interlocuteur, des cotations sous 48 heures, vers le monde entier.',
+                'Fagou sources, aggregates and ships. Five departments, one direct contact, quotations within 48 hours, worldwide.'
+              )}
+            </p>
+            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+              <Link to={ROUTES.PRODUCTS} className="btn-light">{t('Catalogue', 'Catalogue')} →</Link>
+              <a href="catalogue_fagou.pdf" download className="btn-ghost dark">{t('Télécharger le catalogue (PDF)', 'Download catalogue (PDF)')}</a>
+            </div>
           </div>
         </div>
-        {/* Full-bleed cargo ship */}
-        <div style={{ marginLeft: -px, marginRight: -px, position: 'relative' }}>
+
+        {/* Full-bleed hero image */}
+        <div style={{ marginLeft: -px, marginRight: -px, position: 'relative', overflow: 'hidden' }}>
           <Photo
             image={heroCargo}
-            label={t('porte-conteneurs · port d\'anvers', 'container ship · port of antwerp')}
+            label={t('export · conteneurs réfrigérés · port d\'anvers', 'export · reefer containers · port of antwerp')}
             ratio={isMobile ? '4 / 3' : '21 / 9'}
             dark
             objectPosition="center 55%"
           />
+          {/* Gradient overlay for better depth */}
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(15,61,20,0.3) 0%, transparent 40%, transparent 70%, rgba(15,61,20,0.5) 100%)', pointerEvents: 'none' }} />
           <div style={{ position: 'absolute', left: px, bottom: 28 }}>
             <span
               className="fg-mono"
-              style={{ fontSize: 10, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.16em', textTransform: 'uppercase', background: 'rgba(15,61,20,0.6)', padding: '6px 12px', backdropFilter: 'blur(4px)' }}
+              style={{ fontSize: 10, color: 'rgba(255,255,255,0.9)', letterSpacing: '0.16em', textTransform: 'uppercase', background: 'rgba(0,0,0,0.3)', padding: '6px 12px', backdropFilter: 'blur(8px)', borderRadius: 2 }}
             >
-              {t("porte-conteneurs · port d'anvers", 'container ship · port of antwerp')}
+              {t("export · conteneurs réfrigérés · port d'anvers", "export · reefer containers · port of antwerp")}
             </span>
           </div>
         </div>
       </section>
 
       {/* ── STATS ROW ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
+      <div
+        ref={refStats}
+        className="sr"
+        style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}
+      >
         {stats.map((s, i) => (
           <div
             key={i}
+            className={`fg-stat fg-stat-d${i + 1}`}
             style={{
               padding: isMobile ? '28px 20px' : '40px 36px',
               borderRight: isMobile ? (i % 2 === 0 ? '1px solid #E5E7EB' : 'none') : (i < 3 ? '1px solid #E5E7EB' : 'none'),
@@ -186,7 +228,7 @@ export default function Home() {
       </div>
 
       {/* ── DEPARTMENTS GRID ── */}
-      <section style={{ padding: `${isMobile ? 64 : 120}px ${px}px` }}>
+      <section ref={refDepts} className="sr" style={{ padding: `${isMobile ? 64 : 120}px ${px}px` }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 64, alignItems: 'end', marginBottom: isMobile ? 40 : 64 }}>
           <div>
             <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Catalogue', 'Catalogue')}</div>
@@ -208,121 +250,109 @@ export default function Home() {
           </div>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: isMobile ? 20 : 32 }}>
-          {departments.map((d) => (
-            <Link
+          {departments.map((d, i) => (
+            <TiltCard
               key={d.id}
-              to={`${ROUTES.PRODUCTS}?dept=${d.id}`}
-              className="fg-card"
-              style={{ background: '#fff', border: '1px solid #E5E7EB', borderRadius: 10, overflow: 'hidden', textDecoration: 'none', color: 'inherit', display: 'block' }}
+              intensity={isMobile ? 0 : 5}
+              className={`sr sr-d${Math.min(i + 1, 4)}`}
+              style={{ borderRadius: 10, overflow: 'hidden', textDecoration: 'none', color: 'inherit', display: 'block' }}
             >
-              <Photo
-                image={d.cover}
-                label={language === 'fr' ? (d.coverAltFr ?? '') : (d.coverAltEn ?? '')}
-                ratio="16 / 10"
-              />
-              <div style={{ padding: isMobile ? '24px 20px 28px' : '32px 36px 36px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
-                  <span className="fg-mono" style={{ fontSize: 11, color: '#1A5C1A', letterSpacing: '0.16em' }}>↗ {d.code}</span>
-                  <span className="fg-mono" style={{ fontSize: 10, color: '#6B7280', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-                    {d.products.length} {t('références', 'references')}
-                  </span>
+              <Link
+                to={`${ROUTES.PRODUCTS}?dept=${d.id}`}
+                className="fg-card fg-card-3d"
+                style={{ background: '#fff', border: '1px solid #E5E7EB', borderRadius: 10, overflow: 'hidden', textDecoration: 'none', color: 'inherit', display: 'block', height: '100%' }}
+              >
+                <Photo
+                  image={d.cover}
+                  label={language === 'fr' ? (d.coverAltFr ?? '') : (d.coverAltEn ?? '')}
+                  ratio="16 / 10"
+                />
+                <div style={{ padding: isMobile ? '24px 20px 28px' : '32px 36px 36px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
+                    <span className="fg-mono" style={{ fontSize: 11, color: '#1A5C1A', letterSpacing: '0.16em' }}>↗ {d.code}</span>
+                    <span className="fg-mono" style={{ fontSize: 10, color: '#6B7280', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                      {d.products.length} {t('références', 'references')}
+                    </span>
+                  </div>
+                  <h3 className="fg-fr" style={{ fontSize: isMobile ? 30 : 38, margin: 0, fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1.02 }}>
+                    {language === 'fr' ? d.nameFr : d.nameEn}
+                  </h3>
+                  <p style={{ fontSize: 14, color: '#6B7280', margin: '14px 0 18px', lineHeight: 1.55 }}>
+                    {language === 'fr' ? d.ledeFr : d.ledeEn}
+                  </p>
+                  <ul style={{ listStyle: 'none', margin: 0, padding: 0, borderTop: '1px solid #E5E7EB' }}>
+                    {d.products.map((p) => (
+                      <li
+                        key={p.code}
+                        className="fg-mono"
+                        style={{ fontSize: 11, padding: '12px 0', borderBottom: '1px solid #E5E7EB', display: 'flex', justifyContent: 'space-between', letterSpacing: '0.04em', color: '#1A1A1A' }}
+                      >
+                        <span>{language === 'fr' ? p.nameFr : p.nameEn}</span>
+                        <span style={{ color: '#6B7280' }}>{p.code}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h3 className="fg-fr" style={{ fontSize: isMobile ? 30 : 38, margin: 0, fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1.02 }}>
-                  {language === 'fr' ? d.nameFr : d.nameEn}
-                </h3>
-                <p style={{ fontSize: 14, color: '#6B7280', margin: '14px 0 18px', lineHeight: 1.55 }}>
-                  {language === 'fr' ? d.ledeFr : d.ledeEn}
-                </p>
-                <ul style={{ listStyle: 'none', margin: 0, padding: 0, borderTop: '1px solid #E5E7EB' }}>
-                  {d.products.map((p) => (
-                    <li
-                      key={p.code}
-                      className="fg-mono"
-                      style={{ fontSize: 11, padding: '12px 0', borderBottom: '1px solid #E5E7EB', display: 'flex', justifyContent: 'space-between', letterSpacing: '0.04em', color: '#1A1A1A' }}
-                    >
-                      <span>{language === 'fr' ? p.nameFr : p.nameEn}</span>
-                      <span style={{ color: '#6B7280' }}>{p.code}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Link>
+              </Link>
+            </TiltCard>
           ))}
         </div>
       </section>
 
       {/* ── COLD STORAGE TEASER ── */}
-      <section style={{ background: '#0F3D14', position: 'relative', overflow: 'hidden' }}>
-        {/* dot-grid decoration */}
+      <section ref={refCold} className="sr" style={{ background: '#0F3D14', position: 'relative', overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)',
+          backgroundSize: '28px 28px',
         }} />
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-          position: 'relative',
-          zIndex: 1,
-        }}>
-          {/* Text */}
-          <div style={{
-            padding: isMobile ? `56px ${px}px` : `80px ${px}px`,
-            display: 'flex', flexDirection: 'column', justifyContent: 'center',
-          }}>
-            <div className="fg-eyebrow dark" style={{ marginBottom: 20 }}>
-              ↗ 03 · {t('Chambre froide', 'Cold storage')}
-            </div>
-            <h2 className="fg-fr" style={{
-              fontSize: 'clamp(32px, 3.5vw, 56px)',
-              fontWeight: 400, color: '#fff', margin: '0 0 20px',
-              letterSpacing: '-0.035em', lineHeight: 0.96,
-            }}>
+        {/* Animated glow */}
+        <div className="fg-float-slow" style={{ position: 'absolute', top: '-20%', right: '-5%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', position: 'relative', zIndex: 1 }}>
+          <div style={{ padding: isMobile ? `56px ${px}px` : `80px ${px}px`, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div className="fg-eyebrow dark" style={{ marginBottom: 20 }}>↗ 03 · {t('Chambre froide', 'Cold storage')}</div>
+            <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 3.5vw, 56px)', fontWeight: 400, color: '#fff', margin: '0 0 20px', letterSpacing: '-0.035em', lineHeight: 0.96 }}>
               {t('Froid industriel,', 'Industrial cold,')}{' '}
-              <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.45)' }}>
+              <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.4)' }}>
                 {t('depuis Bruxelles.', 'from Brussels.')}
               </span>
             </h2>
-            <p style={{ fontSize: 14, lineHeight: 1.7, color: 'rgba(255,255,255,0.58)', maxWidth: 400, margin: '0 0 32px' }}>
+            <p style={{ fontSize: 14, lineHeight: 1.75, color: 'rgba(255,255,255,0.55)', maxWidth: 400, margin: '0 0 36px' }}>
               {t(
                 'FAGOU a fourni et installé une chambre froide industrielle de 3 100 t au Congo — de −24 °C à l\'ambiant, sur 2 927 m² de panneaux.',
                 'FAGOU supplied and installed a 3,100-t industrial cold storage in Congo — from −24 °C to ambient, across 2,927 m² of panels.'
               )}
             </p>
-            <div style={{ display: 'flex', gap: 28, marginBottom: 36, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 32, marginBottom: 40, flexWrap: 'wrap' }}>
               {[
                 { v: '3 100 t', l: t('capacité', 'capacity') },
                 { v: '−24 °C', l: t('surgélation', 'deep freeze') },
                 { v: '2 927 m²', l: t('surface', 'panel area') },
-              ].map((s) => (
-                <div key={s.v}>
-                  <div className="fg-fr" style={{ fontSize: 28, color: '#fff', lineHeight: 1, marginBottom: 5 }}>{s.v}</div>
-                  <div className="fg-mono" style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{s.l}</div>
+              ].map((s, i) => (
+                <div key={s.v} style={{ position: 'relative' }}>
+                  {i > 0 && <div style={{ position: 'absolute', left: -16, top: '15%', height: '70%', width: 1, background: 'rgba(255,255,255,0.12)' }} />}
+                  <div className="fg-fr" style={{ fontSize: 30, color: '#fff', lineHeight: 1, marginBottom: 6 }}>{s.v}</div>
+                  <div className="fg-mono" style={{ fontSize: 9, color: 'rgba(255,255,255,0.38)', letterSpacing: '0.16em', textTransform: 'uppercase' }}>{s.l}</div>
                 </div>
               ))}
             </div>
             <div>
-              <Link to={ROUTES.COLD} className="btn-light">
-                {t('Voir la chambre froide', 'View cold storage')} →
-              </Link>
+              <Link to={ROUTES.COLD} className="btn-light">{t('Voir la chambre froide', 'View cold storage')} →</Link>
             </div>
           </div>
-
-          {/* Photo — same source as ColdStorage.tsx hero */}
-          <div style={{ position: 'relative', height: isMobile ? 260 : 'auto', overflow: 'hidden' }}>
+          <div style={{ position: 'relative', height: isMobile ? 280 : 'auto', overflow: 'hidden' }}>
             {coldStoragePhoto ? (
-              <img
-                src={coldStoragePhoto}
-                alt={t('Chambre froide installée par FAGOU · Congo', 'Cold storage installed by FAGOU · Congo')}
-                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              />
+              <>
+                <img
+                  src={coldStoragePhoto}
+                  alt={t('Chambre froide installée par FAGOU · Congo', 'Cold storage installed by FAGOU · Congo')}
+                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(15,61,20,0.4) 0%, transparent 40%)', pointerEvents: 'none' }} />
+              </>
             ) : (
-              <div style={{
-                position: 'absolute', inset: 0,
-                backgroundImage: 'repeating-linear-gradient(135deg, transparent 0 7px, rgba(255,255,255,0.04) 7px 8px)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                <span className="fg-mono" style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+              <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(135deg, transparent 0 7px, rgba(255,255,255,0.03) 7px 8px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span className="fg-mono" style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
                   {t('chambre froide · lcc congo', 'cold storage · lcc congo')}
                 </span>
               </div>
@@ -332,15 +362,15 @@ export default function Home() {
       </section>
 
       {/* ── BRANDS TEASER ── */}
-      <section style={{ padding: `${isMobile ? 56 : 96}px ${px}px`, background: '#FAFAF8', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 64, alignItems: 'center' }}>
+      <section ref={refBrands} className="sr" style={{ padding: `${isMobile ? 56 : 96}px ${px}px`, background: '#FAFAF8', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 32 : 80, alignItems: 'center' }}>
           <div>
             <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Marques distribuées', 'Distributed brands')}</div>
             <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 3.5vw, 56px)', margin: '0 0 20px', fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
               {t('Des marques', 'Brands we')}{' '}
               <span style={{ fontStyle: 'italic', color: '#6B7280' }}>{t('que nous distribuons.', 'proudly distribute.')}</span>
             </h2>
-            <p style={{ fontSize: 15, lineHeight: 1.65, color: '#6B7280', margin: '0 0 32px', maxWidth: 420 }}>
+            <p style={{ fontSize: 15, lineHeight: 1.7, color: '#6B7280', margin: '0 0 32px', maxWidth: 420 }}>
               {t(
                 'FAGOU distribue une sélection de marques agro-alimentaires reconnues sur les marchés africains. Mayonnaise, condiments, produits secs — des références que vos clients connaissent.',
                 'FAGOU distributes a selection of agri-food brands recognised across African markets. Mayonnaise, condiments, dry goods — references your customers already know.'
@@ -350,45 +380,38 @@ export default function Home() {
               {t('Découvrir les marques', 'Discover the brands')} →
             </Link>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
-            {brands.map((brand) => (
-              <Link
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+            {brands.map((brand, i) => (
+              <TiltCard
                 key={brand.id}
-                to={ROUTES.BRANDS}
-                style={{
-                  background: '#fff',
-                  border: '1px solid #E5E7EB',
-                  borderRadius: 8,
-                  padding: '28px 20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textDecoration: 'none',
-                  minHeight: 110,
-                }}
+                intensity={isMobile ? 0 : 6}
+                className={`sr sr-d${Math.min(i + 1, 4)}`}
+                style={{ borderRadius: 10 }}
               >
-                {brand.logo ? (
-                  <img
-                    src={brand.logo}
-                    alt={brand.name}
-                    style={{
-                      maxHeight: brand.logo_max_height || '80px',
-                      maxWidth: brand.logo_max_width || '160px',
-                      objectFit: 'contain',
-                      display: 'block',
-                    }}
-                  />
-                ) : (
-                  <span className="fg-fr" style={{ fontSize: 22, fontWeight: 400, color: '#1A1A1A', letterSpacing: '-0.02em' }}>{brand.name}</span>
-                )}
-              </Link>
+                <Link
+                  to={ROUTES.BRANDS}
+                  style={{
+                    background: '#fff', border: '1px solid #E5E7EB', borderRadius: 10,
+                    padding: '28px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    textDecoration: 'none', minHeight: 110, transition: 'border-color 250ms ease',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = '#1A5C1A')}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = '#E5E7EB')}
+                >
+                  {brand.logo ? (
+                    <img src={brand.logo} alt={brand.name} style={{ maxHeight: brand.logo_max_height || '80px', maxWidth: brand.logo_max_width || '160px', objectFit: 'contain', display: 'block' }} />
+                  ) : (
+                    <span className="fg-fr" style={{ fontSize: 22, fontWeight: 400, color: '#1A1A1A', letterSpacing: '-0.02em' }}>{brand.name}</span>
+                  )}
+                </Link>
+              </TiltCard>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── PROCESS ── */}
-      <section style={{ padding: `${isMobile ? 64 : 120}px ${px}px`, background: '#fff', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
+      <section ref={refProcess} className="sr" style={{ padding: `${isMobile ? 64 : 120}px ${px}px`, background: '#fff', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
         <div style={{ marginBottom: isMobile ? 40 : 56 }}>
           <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Notre façon de négocier', 'How we trade')}</div>
           <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 4vw, 64px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
@@ -400,52 +423,56 @@ export default function Home() {
           {processSteps.map((step, i) => (
             <div
               key={i}
+              className={`sr sr-d${i + 1}`}
               style={{
-                paddingTop: 32,
+                paddingTop: 36,
                 paddingBottom: isMobile ? 32 : 0,
                 borderRight: !isMobile && i < 2 ? '1px solid #E5E7EB' : 'none',
                 borderBottom: isMobile && i < 2 ? '1px solid #E5E7EB' : 'none',
-                paddingRight: !isMobile && i < 2 ? 32 : 0,
+                paddingRight: !isMobile && i < 2 ? 36 : 0,
               }}
             >
-              <div className="fg-mono" style={{ fontSize: 11, color: '#1A5C1A', letterSpacing: '0.16em', marginBottom: 24 }}>↗ {step.n}</div>
+              <div className="fg-mono" style={{ fontSize: 11, color: '#1A5C1A', letterSpacing: '0.16em', marginBottom: 28 }}>↗ {step.n}</div>
               <h3 className="fg-fr" style={{ fontSize: 44, margin: 0, fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1 }}>{step.title}</h3>
-              <p style={{ fontSize: 15, lineHeight: 1.6, color: '#6B7280', marginTop: 18 }}>{step.body}</p>
+              <p style={{ fontSize: 15, lineHeight: 1.65, color: '#6B7280', marginTop: 20 }}>{step.body}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* ── PRODUCT PHOTO BAND ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)' }}>
+      <div ref={refPhotos} className="sr-scale sr" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', overflow: 'hidden' }}>
         <Photo image={photoVolaille} label={t('volaille · découpes fraîches', 'poultry · fresh cuts')} ratio={isMobile ? '3 / 2' : '4 / 3'} />
-        <Photo image={photoPoissons} label={t('poissons · sur glace', 'fish · on ice')} ratio={isMobile ? '3 / 2' : '4 / 3'} />
+        <Photo image={photoPoissons} label={t('poissons · frais & congelés', 'fish · fresh & frozen')} ratio={isMobile ? '3 / 2' : '4 / 3'} />
         <Photo image={photoOignons} label={t('oignons rouges · sacs gala', 'red onions · gala bags')} ratio={isMobile ? '3 / 2' : '4 / 3'} />
       </div>
 
       {/* ── FINAL CTA ── */}
-      <section style={{ background: '#1A5C1A', color: '#fff', padding: `${isMobile ? 72 : 128}px ${px}px` }}>
-        <div className="fg-eyebrow dark" style={{ marginBottom: 36 }}>↗ {t('Parler à Fagou', 'Talk to Fagou')}</div>
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.4fr 1fr', gap: isMobile ? 32 : 64, alignItems: 'end' }}>
-          <h2
-            className="fg-fr"
-            style={{ fontSize: 'clamp(40px, 6vw, 88px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96, color: '#fff' }}
-          >
-            {t('Une demande,', 'One inquiry,')}{' '}
-            <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.6)' }}>
-              {t('une cotation sous 48 h.', 'one quote within 48 h.')}
-            </span>
-          </h2>
-          <div>
-            <p style={{ fontSize: 16, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', marginBottom: 28 }}>
-              {t(
-                "Décrivez votre besoin (département, volume, destination, incoterm). Nous revenons avec un prix indicatif et un planning d'expédition.",
-                'Describe your need (department, volume, destination, incoterm). We come back with an indicative price and a shipping window.'
-              )}
-            </p>
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <Link to={ROUTES.CONTACT} className="btn-light">{t('Nous écrire', 'Get in touch')} →</Link>
-              <a href="catalogue_fagou.pdf" download className="btn-ghost dark">{t('Télécharger le catalogue (PDF)', 'Download catalogue (PDF)')}</a>
+      <section ref={refCta} className="sr" style={{ background: '#1A5C1A', color: '#fff', padding: `${isMobile ? 72 : 128}px ${px}px`, position: 'relative', overflow: 'hidden' }}>
+        <div className="fg-float" style={{ position: 'absolute', top: '-30%', right: '-5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div className="fg-eyebrow dark" style={{ marginBottom: 36 }}>↗ {t('Parler à Fagou', 'Talk to Fagou')}</div>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.4fr 1fr', gap: isMobile ? 32 : 64, alignItems: 'end' }}>
+            <h2
+              className="fg-fr"
+              style={{ fontSize: 'clamp(40px, 6vw, 88px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96, color: '#fff' }}
+            >
+              {t('Une demande,', 'One inquiry,')}{' '}
+              <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.5)' }}>
+                {t('une cotation sous 48 h.', 'one quote within 48 h.')}
+              </span>
+            </h2>
+            <div>
+              <p style={{ fontSize: 16, lineHeight: 1.65, color: 'rgba(255,255,255,0.8)', marginBottom: 28 }}>
+                {t(
+                  "Décrivez votre besoin (département, volume, destination, incoterm). Nous revenons avec un prix indicatif et un planning d'expédition.",
+                  'Describe your need (department, volume, destination, incoterm). We come back with an indicative price and a shipping window.'
+                )}
+              </p>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <Link to={ROUTES.CONTACT} className="btn-light">{t('Nous écrire', 'Get in touch')} →</Link>
+                <a href="catalogue_fagou.pdf" download className="btn-ghost dark">{t('Télécharger le catalogue (PDF)', 'Download catalogue (PDF)')}</a>
+              </div>
             </div>
           </div>
         </div>
