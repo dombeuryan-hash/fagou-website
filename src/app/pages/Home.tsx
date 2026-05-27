@@ -26,7 +26,6 @@ function useReveal(threshold = 0.1) {
   return ref
 }
 
-const FALLBACK_CARGO = 'https://images.unsplash.com/photo-1494412651409-8963ce7935a7?w=1920&q=80'
 const FALLBACK_VOLAILLE = 'assets/product-volaille.png'
 const FALLBACK_POISSONS = 'assets/product-poissons.png'
 const FALLBACK_OIGNONS  = 'assets/product-oignons-rouges-gala.png'
@@ -126,7 +125,6 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const heroCargo = settings['home_hero_cargo'] || FALLBACK_CARGO
   const photoVolaille = settings['home_photo_1'] || FALLBACK_VOLAILLE
   const photoPoissons = settings['home_photo_2'] || FALLBACK_POISSONS
   const photoOignons       = settings['home_photo_3'] || FALLBACK_OIGNONS
