@@ -1,33 +1,45 @@
 import { Link } from 'react-router-dom'
-import { ArrowLeft, AlertCircle } from 'lucide-react'
-import { Button } from '../components/ui/Button'
+import { Nav } from '../components/layout/Nav'
 import { useLanguage } from '../hooks/useLanguage'
+import { useIsMobile } from '../hooks/useIsMobile'
 import { ROUTES } from '../constants'
 
 export default function NotFound() {
   const { t } = useLanguage()
+  const isMobile = useIsMobile()
+  const px = isMobile ? 20 : 64
 
   return (
-    <div style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '40px 24px' }}>
-      <AlertCircle size={64} color="#1A5C1A" style={{ marginBottom: '24px' }} />
-      <h1 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 800, fontSize: '80px', color: '#1A5C1A', lineHeight: 1 }}>
-        404
-      </h1>
-      <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '28px', color: '#1A1A1A', marginBottom: '16px', marginTop: '8px' }}>
-        {t('Page introuvable', 'Page not found')}
-      </h2>
-      <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '16px', color: '#6B7280', maxWidth: '400px', lineHeight: 1.7, marginBottom: '36px' }}>
-        {t(
-          'La page que vous cherchez n\'existe pas ou a été déplacée. Revenez à l\'accueil pour continuer votre navigation.',
-          'The page you are looking for does not exist or has been moved. Return to the home page to continue browsing.'
-        )}
-      </p>
-      <Link to={ROUTES.HOME}>
-        <Button size="lg">
-          <ArrowLeft size={18} />
-          {t('Retour à l\'accueil', 'Back to home')}
-        </Button>
-      </Link>
+    <div style={{ position: 'relative', backgroundColor: '#FAFAF8', minHeight: '100vh' }}>
+      <Nav />
+
+      <section style={{ padding: `${isMobile ? 140 : 240}px ${px}px ${isMobile ? 80 : 160}px` }}>
+        <div className="fg-eyebrow" style={{ marginBottom: 32 }}>↗ {t('Erreur', 'Error')}</div>
+        <h1
+          className="fg-fr"
+          style={{ fontSize: 'clamp(80px, 15vw, 200px)', margin: 0, fontWeight: 400, letterSpacing: '-0.05em', lineHeight: 0.85, color: '#1A5C1A' }}
+        >
+          404
+        </h1>
+        <h2
+          className="fg-fr"
+          style={{ fontSize: 'clamp(28px, 4vw, 56px)', margin: '24px 0 0', fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}
+        >
+          {t('Page', 'Page')}{' '}
+          <span style={{ fontStyle: 'italic', color: '#6B7280' }}>{t('introuvable.', 'not found.')}</span>
+        </h2>
+        <p style={{ fontSize: 16, lineHeight: 1.65, color: '#6B7280', marginTop: 28, maxWidth: 440 }}>
+          {t(
+            "La page que vous cherchez n'existe pas ou a été déplacée. Revenez à l'accueil pour continuer.",
+            'The page you are looking for does not exist or has been moved. Return to the home page to continue.',
+          )}
+        </p>
+        <div style={{ marginTop: 40 }}>
+          <Link to={ROUTES.HOME} className="btn-primary">
+            {t('← Retour à l\'accueil', '← Back to home')}
+          </Link>
+        </div>
+      </section>
     </div>
   )
 }

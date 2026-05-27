@@ -104,25 +104,65 @@ export default function About() {
 
       {/* ── HISTOIRE ── */}
       <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, borderBottom: '1px solid #E5E7EB' }}>
-        <div style={{ maxWidth: 880 }}>
+        <div style={{ maxWidth: 940 }}>
           <div className="fg-eyebrow" style={{ marginBottom: 24 }}>↗ {t('Histoire & Création', 'History & Founding')}</div>
           <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 5vw, 76px)', margin: '0 0 40px', fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
             {t('Fondée à Bruxelles,', 'Founded in Brussels,')}{' '}
             <span style={{ fontStyle: 'italic', color: '#6B7280' }}>{t('ancrée dans le monde.', 'rooted in the world.')}</span>
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 48, borderTop: '1px solid #E5E7EB', paddingTop: 48 }}>
-            <p style={{ fontSize: 16, lineHeight: 1.7, color: '#6B7280', margin: 0 }}>
-              {t(
-                "Fagou SRL a été créée en Belgique avec pour ambition de devenir un intermédiaire de confiance dans le secteur de l'agroalimentaire international.",
-                'Fagou SRL was founded in Belgium with the ambition to become a trusted intermediary in the international agri-food sector.'
-              )}
-            </p>
-            <p style={{ fontSize: 16, lineHeight: 1.7, color: '#6B7280', margin: 0 }}>
-              {t(
-                "Depuis sa fondation, l'entreprise n'a cessé de croître, élargissant son réseau de partenaires et de clients sur tous les continents.",
-                "Since its founding, the company has grown continuously, expanding its network of partners and clients across all continents."
-              )}
-            </p>
+            <div>
+              <p style={{ fontSize: 16, lineHeight: 1.75, color: '#6B7280', margin: '0 0 20px' }}>
+                {t(
+                  "Fagou SRL a été créée en Belgique avec pour ambition de devenir un intermédiaire de confiance dans le secteur de l'agroalimentaire international. Dès ses débuts, l'entreprise s'est spécialisée dans l'import-export de produits alimentaires entre l'Europe et l'Afrique, en particulier vers l'Afrique centrale.",
+                  'Fagou SRL was founded in Belgium with the ambition to become a trusted intermediary in the international agro-food sector. From its earliest days, the company specialised in the import-export of food products between Europe and Africa, particularly Central Africa.',
+                )}
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.75, color: '#6B7280', margin: 0 }}>
+                {t(
+                  "La mission fondatrice est restée intacte : connecter les meilleurs fournisseurs européens aux marchés africains, avec rigueur documentaire, traçabilité complète et un seul interlocuteur par compte client.",
+                  'The founding mission has remained unchanged: connect the best European suppliers to African markets, with documentary rigour, full traceability and a single point of contact per client account.',
+                )}
+              </p>
+            </div>
+            <div>
+              <p style={{ fontSize: 16, lineHeight: 1.75, color: '#6B7280', margin: '0 0 20px' }}>
+                {t(
+                  "Depuis sa fondation, Fagou n'a cessé de croître, élargissant son réseau de partenaires et de clients sur tous les continents. L'entreprise opère aujourd'hui sur cinq lignes complémentaires — produits congelés, agroalimentaire, ingrédients & conditionnement, huile de palmiste — avec des cotations sous 48 heures.",
+                  "Since its founding, Fagou has grown continuously, expanding its network of partners and clients across all continents. The company now operates across five complementary lines — frozen products, agro-food, ingredients & packaging, palm kernel oil — with quotations within 48 hours.",
+                )}
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.75, color: '#6B7280', margin: 0 }}>
+                {t(
+                  "En 2024, Fagou a également fourni et installé une chambre froide industrielle de 3 100 t au Congo — démontrant sa capacité à aller au-delà du négoce pour accompagner le développement des infrastructures alimentaires africaines.",
+                  'In 2024, Fagou also supplied and installed a 3,100-t industrial cold storage facility in Congo — demonstrating its ability to go beyond trading to support the development of African food infrastructure.',
+                )}
+              </p>
+            </div>
+          </div>
+
+          {/* Timeline milestones */}
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 0, borderTop: '1px solid #E5E7EB', marginTop: 56 }}>
+            {[
+              { year: '2013', labelFr: 'Création à Bruxelles', labelEn: 'Founded in Brussels' },
+              { year: '2016', labelFr: 'Ouverture export Afrique', labelEn: 'Africa export launch' },
+              { year: '2020', labelFr: '5 départements actifs', labelEn: '5 active departments' },
+              { year: '2024', labelFr: 'Chambre froide Congo', labelEn: 'Congo cold storage' },
+            ].map((m, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: isMobile ? '28px 0' : '36px 0',
+                  paddingRight: !isMobile && i < 3 ? 32 : 0,
+                  paddingLeft: !isMobile && i > 0 ? 32 : 0,
+                  borderRight: !isMobile && i < 3 ? '1px solid #E5E7EB' : 'none',
+                  borderBottom: isMobile && i < 2 ? '1px solid #E5E7EB' : 'none',
+                }}
+              >
+                <div className="fg-fr" style={{ fontSize: 36, fontWeight: 400, letterSpacing: '-0.04em', color: '#1A5C1A', lineHeight: 1 }}>{m.year}</div>
+                <div style={{ fontSize: 13, color: '#1A1A1A', marginTop: 10, lineHeight: 1.4 }}>{t(m.labelFr, m.labelEn)}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -290,20 +330,26 @@ export default function About() {
       </section>
 
       {/* ── TEAM PLACEHOLDER ── */}
-      <div style={{ width: '100%', aspectRatio: isMobile ? '4 / 3' : '16 / 7', background: '#EEF2EE', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(135deg, transparent 0 7px, rgba(15,61,20,0.08) 7px 8px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(15,61,20,0.55)', fontWeight: 500 }}>
-            {t('équipe fagou · bureau bruxelles', 'fagou team · brussels office')}
-          </span>
+      <div style={{ width: '100%', aspectRatio: isMobile ? '4 / 3' : '16 / 7', background: 'linear-gradient(135deg, #EEF2EE 0%, #E8EDE8 100%)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(135deg, transparent 0 7px, rgba(15,61,20,0.06) 7px 8px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(26,92,26,0.1)', border: '1px solid rgba(26,92,26,0.15)', margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="fg-mono" style={{ fontSize: 14, color: '#1A5C1A', fontWeight: 500 }}>F</span>
+            </div>
+            <span className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(15,61,20,0.45)', fontWeight: 500 }}>
+              {t('équipe fagou · bureau bruxelles', 'fagou team · brussels office')}
+            </span>
+          </div>
         </div>
       </div>
 
       {/* ── CTA ── */}
-      <section style={{ background: '#0F3D14', color: '#fff', padding: `${isMobile ? 72 : 120}px ${px}px` }}>
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.4fr 1fr', gap: isMobile ? 32 : 64, alignItems: 'end' }}>
-          <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 5vw, 76px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96, color: '#fff' }}>
+      <section style={{ background: '#0F3D14', color: '#fff', padding: `${isMobile ? 72 : 120}px ${px}px`, position: 'relative', overflow: 'hidden' }}>
+        <div className="fg-float-slow" style={{ position: 'absolute', top: '-25%', right: '-8%', width: 350, height: 350, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.4fr 1fr', gap: isMobile ? 32 : 64, alignItems: 'end' }}>
+          <h2 className="fg-fr" style={{ fontSize: 'clamp(36px, 5vw, 80px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96, color: '#fff' }}>
             {t('Un projet, ', 'A project, ')}
-            <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.55)' }}>{t('une cotation.', 'a quotation.')}</span>
+            <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.45)' }}>{t('une cotation.', 'a quotation.')}</span>
           </h2>
           <div>
             <Link to={ROUTES.CONTACT} className="btn-light">{t('Nous écrire', 'Get in touch')} →</Link>

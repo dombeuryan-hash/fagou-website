@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FagouLogo } from '../common/FagouLogo'
 import { useLanguage } from '../../hooks/useLanguage'
@@ -21,7 +21,17 @@ const NAV_ITEMS = [
 export function Nav({ dark = false }: NavProps) {
   const { t, language, toggleLanguage } = useLanguage()
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- closes menu on navigation
+  useEffect(() => { setOpen(false) }, [location.pathname])
 
   const fg = dark ? '#fff' : '#1A1A1A'
   const muted = dark ? 'rgba(255,255,255,0.55)' : '#6B7280'
@@ -32,27 +42,40 @@ export function Nav({ dark = false }: NavProps) {
   const isActive = (path: string) =>
     path === '/' ? location.pathname === '/' : location.pathname.startsWith(path)
 
+  const desktopBg = scrolled
+    ? dark
+      ? 'rgba(15, 61, 20, 0.88)'
+      : 'rgba(250, 250, 248, 0.85)'
+    : 'transparent'
+
+  const desktopBlur = scrolled ? 'blur(16px) saturate(180%)' : 'none'
+
   return (
     <>
       {/* Desktop nav */}
       <div
         className="fg-desktop-only"
         style={{
-          position: 'absolute',
+          position: 'fixed',
           top: 0, left: 0, right: 0,
           zIndex: 20,
-          padding: '24px 64px',
+          padding: scrolled ? '16px 64px' : '24px 64px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderBottom: `1px solid ${borderC}`,
+          borderBottom: `1px solid ${scrolled ? borderC : 'transparent'}`,
+          background: desktopBg,
+          backdropFilter: desktopBlur,
+          WebkitBackdropFilter: desktopBlur,
+          transition: 'all 400ms cubic-bezier(0.22, 1, 0.36, 1)',
+          boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.06)' : 'none',
         }}
       >
         <Link
           to={ROUTES.HOME}
           style={{ display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none' }}
         >
-          <FagouLogo size={40} dark={dark} />
+          <FagouLogo size={scrolled ? 34 : 40} dark={dark} />
           <span
             className="fg-mono"
             style={{
@@ -65,20 +88,22 @@ export function Nav({ dark = false }: NavProps) {
               height: 40,
               display: 'flex',
               alignItems: 'center',
+              transition: 'opacity 300ms ease',
+              opacity: scrolled ? 0 : 1,
             }}
           >
             SRL · Bruxelles
           </span>
         </Link>
 
-        <nav style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
+        <nav style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
           {NAV_ITEMS.map((item) => {
             const active = isActive(item.path)
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className="fg-mono"
+                className="fg-mono fg-underline-reveal"
                 style={{
                   fontSize: 11,
                   letterSpacing: '0.14em',
@@ -87,11 +112,9 @@ export function Nav({ dark = false }: NavProps) {
                   color: active ? activeFg : mutedFg,
                   textDecoration: 'none',
                   cursor: 'pointer',
-                  borderBottom: active
-                    ? `1px solid ${dark ? '#fff' : '#1A5C1A'}`
-                    : '1px solid transparent',
                   paddingBottom: 4,
-                  transition: 'color 200ms ease',
+                  transition: 'color 250ms ease',
+                  opacity: active ? 1 : 0.85,
                 }}
               >
                 {t(item.labelFr, item.labelEn)}
@@ -115,6 +138,7 @@ export function Nav({ dark = false }: NavProps) {
               color: fg,
               cursor: 'pointer',
               fontWeight: 500,
+              transition: 'all 250ms ease',
             }}
           >
             {language === 'fr' ? 'EN' : 'FR'}
@@ -133,15 +157,22 @@ export function Nav({ dark = false }: NavProps) {
       <div
         className="fg-mobile-only"
         style={{
-          position: 'absolute',
+          position: 'fixed',
           top: 0, left: 0, right: 0,
           zIndex: 20,
           padding: '18px 20px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderBottom: `1px solid ${borderC}`,
-          background: dark ? '#0F3D14' : 'transparent',
+          borderBottom: `1px solid ${open || scrolled ? borderC : 'transparent'}`,
+          background: open
+            ? (dark ? '#0F3D14' : '#FAFAF8')
+            : scrolled
+              ? (dark ? 'rgba(15, 61, 20, 0.92)' : 'rgba(250, 250, 248, 0.9)')
+              : (dark ? 'transparent' : 'transparent'),
+          backdropFilter: open || scrolled ? 'blur(16px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: open || scrolled ? 'blur(16px) saturate(180%)' : 'none',
+          transition: 'all 350ms cubic-bezier(0.22, 1, 0.36, 1)',
         }}
       >
         <Link to={ROUTES.HOME} style={{ textDecoration: 'none' }}>
@@ -170,6 +201,7 @@ export function Nav({ dark = false }: NavProps) {
           <button
             onClick={() => setOpen((o) => !o)}
             aria-label="menu"
+            aria-expanded={open}
             style={{
               background: 'transparent',
               border: 0,
@@ -188,7 +220,7 @@ export function Nav({ dark = false }: NavProps) {
                   height: 1.5,
                   background: fg,
                   display: 'block',
-                  transition: 'transform 200ms',
+                  transition: 'all 350ms cubic-bezier(0.22, 1, 0.36, 1)',
                   opacity: open && i === 1 ? 0 : 1,
                   transform:
                     open && i === 0
@@ -203,50 +235,56 @@ export function Nav({ dark = false }: NavProps) {
         </div>
       </div>
 
-      {open && (
-        <div
-          className="fg-mobile-only"
-          style={{
-            position: 'absolute',
-            top: 60,
-            left: 0,
-            right: 0,
-            zIndex: 19,
-            background: dark ? '#0F3D14' : '#FAFAF8',
-            padding: '20px',
-            borderBottom: `1px solid ${borderC}`,
-          }}
-        >
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              onClick={() => setOpen(false)}
-              className="fg-mono"
-              style={{
-                display: 'block',
-                padding: '14px 0',
-                fontSize: 12,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: isActive(item.path) ? activeFg : fg,
-                textDecoration: 'none',
-                borderBottom: `1px solid ${borderC}`,
-              }}
-            >
-              {t(item.labelFr, item.labelEn)}
-            </Link>
-          ))}
+      {/* Mobile drawer */}
+      <div
+        className="fg-mobile-only"
+        style={{
+          position: 'fixed',
+          top: 60,
+          left: 0,
+          right: 0,
+          zIndex: 19,
+          background: dark ? '#0F3D14' : '#FAFAF8',
+          padding: open ? '20px' : '0 20px',
+          borderBottom: open ? `1px solid ${borderC}` : 'none',
+          maxHeight: open ? '80vh' : 0,
+          overflow: 'hidden',
+          transition: 'all 450ms cubic-bezier(0.22, 1, 0.36, 1)',
+          opacity: open ? 1 : 0,
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+        }}
+      >
+        {NAV_ITEMS.map((item) => (
           <Link
-            to={ROUTES.CONTACT}
+            key={item.path}
+            to={item.path}
             onClick={() => setOpen(false)}
-            className="btn-primary"
-            style={{ marginTop: 16, width: '100%', justifyContent: 'center' }}
+            className="fg-mono"
+            style={{
+              display: 'block',
+              padding: '14px 0',
+              fontSize: 12,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: isActive(item.path) ? activeFg : fg,
+              textDecoration: 'none',
+              borderBottom: `1px solid ${borderC}`,
+              transition: 'color 250ms ease',
+            }}
           >
-            {t('Demander une cotation', 'Request a quotation')}
+            {t(item.labelFr, item.labelEn)}
           </Link>
-        </div>
-      )}
+        ))}
+        <Link
+          to={ROUTES.CONTACT}
+          onClick={() => setOpen(false)}
+          className="btn-primary"
+          style={{ marginTop: 16, width: '100%', justifyContent: 'center' }}
+        >
+          {t('Demander une cotation', 'Request a quotation')}
+        </Link>
+      </div>
     </>
   )
 }

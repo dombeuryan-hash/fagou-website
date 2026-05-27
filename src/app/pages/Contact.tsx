@@ -88,9 +88,9 @@ export default function Contact() {
   }
 
   const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '12px 14px', border: '1px solid #E5E7EB', borderRadius: 6,
+    width: '100%', padding: '14px 16px', border: '1px solid #E5E7EB', borderRadius: 8,
     background: '#fff', fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#1A1A1A',
-    outline: 'none', transition: 'border-color 200ms ease', boxSizing: 'border-box',
+    outline: 'none', transition: 'border-color 300ms ease, box-shadow 300ms ease', boxSizing: 'border-box',
   }
 
   const labelStyle: React.CSSProperties = {
@@ -156,26 +156,26 @@ export default function Contact() {
                 <div>
                   <label style={labelStyle}>↗ {t('Société', 'Company')} *</label>
                   <input style={inputStyle} value={form.company} onChange={(e) => upd('company', e.target.value)} required maxLength={200}
-                    onFocus={(e) => { (e.target as HTMLInputElement).style.borderColor = '#2E8B2E' }}
-                    onBlur={(e) => { (e.target as HTMLInputElement).style.borderColor = '#E5E7EB' }} />
+                    onFocus={(e) => { (e.target as HTMLInputElement).style.borderColor = '#1A5C1A'; (e.target as HTMLInputElement).style.boxShadow = '0 0 0 3px rgba(26,92,26,0.1)' }}
+                    onBlur={(e) => { (e.target as HTMLInputElement).style.borderColor = '#E5E7EB'; (e.target as HTMLInputElement).style.boxShadow = 'none' }} />
                 </div>
                 <div>
                   <label style={labelStyle}>↗ {t('Pays', 'Country')} *</label>
                   <input style={inputStyle} value={form.country} onChange={(e) => upd('country', e.target.value)} required maxLength={100}
-                    onFocus={(e) => { (e.target as HTMLInputElement).style.borderColor = '#2E8B2E' }}
-                    onBlur={(e) => { (e.target as HTMLInputElement).style.borderColor = '#E5E7EB' }} />
+                    onFocus={(e) => { (e.target as HTMLInputElement).style.borderColor = '#1A5C1A'; (e.target as HTMLInputElement).style.boxShadow = '0 0 0 3px rgba(26,92,26,0.1)' }}
+                    onBlur={(e) => { (e.target as HTMLInputElement).style.borderColor = '#E5E7EB'; (e.target as HTMLInputElement).style.boxShadow = 'none' }} />
                 </div>
                 <div>
                   <label style={labelStyle}>↗ Email *</label>
                   <input style={inputStyle} type="email" value={form.email} onChange={(e) => upd('email', e.target.value)} required maxLength={254}
-                    onFocus={(e) => { (e.target as HTMLInputElement).style.borderColor = '#2E8B2E' }}
-                    onBlur={(e) => { (e.target as HTMLInputElement).style.borderColor = '#E5E7EB' }} />
+                    onFocus={(e) => { (e.target as HTMLInputElement).style.borderColor = '#1A5C1A'; (e.target as HTMLInputElement).style.boxShadow = '0 0 0 3px rgba(26,92,26,0.1)' }}
+                    onBlur={(e) => { (e.target as HTMLInputElement).style.borderColor = '#E5E7EB'; (e.target as HTMLInputElement).style.boxShadow = 'none' }} />
                 </div>
                 <div>
                   <label style={labelStyle}>↗ {t('Téléphone', 'Phone')}</label>
                   <input style={inputStyle} value={form.phone} onChange={(e) => upd('phone', e.target.value)} maxLength={30}
-                    onFocus={(e) => { (e.target as HTMLInputElement).style.borderColor = '#2E8B2E' }}
-                    onBlur={(e) => { (e.target as HTMLInputElement).style.borderColor = '#E5E7EB' }} />
+                    onFocus={(e) => { (e.target as HTMLInputElement).style.borderColor = '#1A5C1A'; (e.target as HTMLInputElement).style.boxShadow = '0 0 0 3px rgba(26,92,26,0.1)' }}
+                    onBlur={(e) => { (e.target as HTMLInputElement).style.borderColor = '#E5E7EB'; (e.target as HTMLInputElement).style.boxShadow = 'none' }} />
                 </div>
               </div>
 
@@ -229,8 +229,8 @@ export default function Contact() {
                   value={form.message}
                   maxLength={3000}
                   onChange={(e) => upd('message', e.target.value)}
-                  onFocus={(e) => { (e.target as HTMLTextAreaElement).style.borderColor = '#2E8B2E' }}
-                  onBlur={(e) => { (e.target as HTMLTextAreaElement).style.borderColor = '#E5E7EB' }}
+                  onFocus={(e) => { (e.target as HTMLTextAreaElement).style.borderColor = '#1A5C1A'; (e.target as HTMLTextAreaElement).style.boxShadow = '0 0 0 3px rgba(26,92,26,0.1)' }}
+                  onBlur={(e) => { (e.target as HTMLTextAreaElement).style.borderColor = '#E5E7EB'; (e.target as HTMLTextAreaElement).style.boxShadow = 'none' }}
                 />
               </div>
 

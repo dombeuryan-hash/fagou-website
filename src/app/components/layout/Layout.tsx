@@ -6,18 +6,11 @@ import { ScrollToTop } from '../common/ScrollToTop'
 
 function PageLoader() {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-      <div
-        style={{
-          width: '36px',
-          height: '36px',
-          border: '2px solid #E5E7EB',
-          borderTopColor: '#1A5C1A',
-          borderRadius: '50%',
-          animation: 'spin 0.7s linear infinite',
-        }}
-      />
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '60vh', gap: 16 }}>
+      <div className="fg-loader" />
+      <span className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#6B7280' }}>
+        Fagou
+      </span>
     </div>
   )
 }

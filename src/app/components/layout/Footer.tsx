@@ -3,7 +3,7 @@ import { FagouLogo } from '../common/FagouLogo'
 import { useLanguage } from '../../hooks/useLanguage'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { departments } from '../../data/departmentsData'
-import { ROUTES } from '../../constants'
+import { ROUTES, COMPANY_PHONE } from '../../constants'
 
 export function Footer() {
   const { t, language } = useLanguage()
@@ -42,86 +42,95 @@ export function Footer() {
     { title: t('Légal', 'Legal'), links: legalLinks },
   ]
 
-  const linkStyle = {
-    fontFamily: 'Fraunces, Georgia, serif',
-    fontSize: isMobile ? 16 : 18,
-    color: 'rgba(255,255,255,0.92)',
-    fontWeight: 400,
-    letterSpacing: '-0.02em',
-    lineHeight: 1.3,
-    textDecoration: 'none',
-    display: 'inline-block',
-    transition: 'color 200ms ease',
-  } as const
-
   const px = isMobile ? 20 : 64
 
   return (
-    <footer style={{ background: '#0F3D14', color: '#fff', padding: `${isMobile ? 56 : 88}px ${px}px ${isMobile ? 32 : 40}px` }}>
-      {/* Logo + tagline */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: isMobile ? 48 : 72 }}>
-        <FagouLogo size={40} dark />
-        <span
-          className="fg-mono"
-          style={{
-            fontSize: 10,
-            color: 'rgba(242,247,242,0.55)',
-            letterSpacing: '0.16em',
-            textTransform: 'uppercase',
-            borderLeft: '1px solid rgba(242,247,242,0.18)',
-            paddingLeft: 16,
-            height: 28,
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          {t('Négoce agro-alimentaire, Bruxelles', 'Agri-food trading, Brussels')}
-        </span>
-      </div>
+    <footer style={{ position: 'relative', background: '#0F3D14', color: '#fff' }}>
+      {/* Animated gradient separator */}
+      <div className="fg-gradient-separator" />
 
-      {/* Link columns */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: isMobile ? 40 : 56, marginBottom: isMobile ? 48 : 64 }}>
-        {cols.map((col) => (
-          <div key={col.title}>
-            <div
-              className="fg-mono"
-              style={{
-                fontSize: 10,
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                color: 'rgba(242,247,242,0.5)',
-                marginBottom: 18,
-                fontWeight: 500,
-              }}
-            >
-              ↗ {col.title}
-            </div>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {col.links.map((link) => (
-                <li key={link.label + link.path}>
-                  <Link
-                    to={link.path}
-                    style={linkStyle}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#fff' }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.92)' }}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+      {/* Subtle noise texture */}
+      <div style={{ position: 'absolute', inset: 0, opacity: 0.015, backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.05) 0%, transparent 50%)', pointerEvents: 'none' }} />
 
-      {/* Bottom bar */}
-      <div style={{ height: 1, background: 'rgba(242,247,242,0.18)', marginBottom: 24 }} />
-      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: 8 }}>
-        <div className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.14em', color: 'rgba(242,247,242,0.6)', textTransform: 'uppercase' }}>
-          © 2013 – {new Date().getFullYear()} Fagou SRL · Rhode-Saint-Genèse, Belgique
+      <div style={{ position: 'relative', padding: `${isMobile ? 56 : 88}px ${px}px ${isMobile ? 32 : 40}px` }}>
+        {/* Logo + tagline */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: isMobile ? 48 : 72 }}>
+          <FagouLogo size={40} dark />
+          <span
+            className="fg-mono"
+            style={{
+              fontSize: 10,
+              color: 'rgba(242,247,242,0.50)',
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              borderLeft: '1px solid rgba(242,247,242,0.15)',
+              paddingLeft: 16,
+              height: 28,
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            {t('Négoce agro-alimentaire, Bruxelles', 'Agro-food trading, Brussels')}
+          </span>
         </div>
-        <div className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.14em', color: 'rgba(242,247,242,0.5)', textTransform: 'uppercase' }}>
-          TVA · BE 0542.382.824 · RPM Bruxelles
+
+        {/* Link columns */}
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: isMobile ? 40 : 56, marginBottom: isMobile ? 48 : 64 }}>
+          {cols.map((col) => (
+            <div key={col.title}>
+              <div
+                className="fg-mono"
+                style={{
+                  fontSize: 10,
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                  color: 'rgba(242,247,242,0.40)',
+                  marginBottom: 20,
+                  fontWeight: 500,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <span style={{ display: 'inline-block', width: 4, height: 4, borderRadius: '50%', background: '#2E8B2E', flexShrink: 0 }} />
+                {col.title}
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
+                {col.links.map((link) => (
+                  <li key={link.label + link.path}>
+                    <Link to={link.path} className="fg-footer-link">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Contact info row */}
+        <div style={{ display: 'flex', gap: isMobile ? 20 : 40, flexWrap: 'wrap', alignItems: 'center', paddingBottom: isMobile ? 32 : 40, borderBottom: '1px solid rgba(242,247,242,0.12)' }}>
+          <a href={`tel:${COMPANY_PHONE.replace(/\s/g, '')}`} className="fg-footer-contact-link">
+            {COMPANY_PHONE}
+          </a>
+          <a href="mailto:trading@fagou.be" className="fg-footer-contact-link">
+            trading@fagou.be
+          </a>
+          {!isMobile && (
+            <span className="fg-mono" style={{ fontSize: 10, color: 'rgba(242,247,242,0.25)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              Chaussée de Waterloo 198-200 · Rhode-Saint-Genèse
+            </span>
+          )}
+        </div>
+
+        {/* Bottom bar */}
+        <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: 8, paddingTop: 24 }}>
+          <div className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.14em', color: 'rgba(242,247,242,0.45)', textTransform: 'uppercase' }}>
+            © 2013 – {new Date().getFullYear()} Fagou SRL · Rhode-Saint-Genèse, Belgique
+          </div>
+          <div className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.14em', color: 'rgba(242,247,242,0.30)', textTransform: 'uppercase' }}>
+            TVA · BE 0542.382.824 · RPM Bruxelles
+          </div>
         </div>
       </div>
     </footer>
