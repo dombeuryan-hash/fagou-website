@@ -543,9 +543,12 @@ export default function HomeAtlas() {
                   <div className="mono">{t('Panneaux','Panel area')}</div>
                 </div>
               </div>
-              <Link to={ROUTES.COLD} className="at-btn at-btn-light r d4" style={{ marginTop:38, display:'inline-flex' }}>
-                {t('Parler chambre froide','Discuss a cold room')} <span className="arr">→</span>
-              </Link>
+              <div className="r d4" style={{ marginTop:38 }}>
+                <Link to={ROUTES.COLD} className="at-btn-cta">
+                  <span className="cta-label">{t('Parler chambre froide','Discuss a cold room')}</span>
+                  <span className="cta-disc" aria-hidden="true">→</span>
+                </Link>
+              </div>
             </div>
             <div className="coldroom-media r r-scale d2">
               {coldPhoto
