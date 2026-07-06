@@ -263,13 +263,84 @@ export default function Contact() {
 
           {/* SIDEBAR */}
           <aside>
-            <div style={{ position: 'relative', background: '#F2F7F2', height: 240, marginBottom: 28, overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(0deg, transparent 0 39px, #E5E7EB 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, #E5E7EB 39px 40px)' }} />
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                <div style={{ width: 12, height: 12, background: '#1A5C1A', borderRadius: '50%', boxShadow: '0 0 0 8px rgba(26,92,26,0.15)' }} />
-                <span className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#1A5C1A' }}>UCCLE · BRUXELLES</span>
+            {/* ── Head-office locator — stylised animated mini-map ── */}
+            <style>{`
+              @keyframes fgPing  { 0% { transform: scale(.3); opacity: .5; } 75% { opacity: 0; } 100% { transform: scale(1); opacity: 0; } }
+              @keyframes fgRoad  { to { stroke-dashoffset: 0; } }
+              @keyframes fgHover { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,-4px); } }
+              .fg-mappanel { display:block; position:relative; height:300px; margin-bottom:28px; overflow:hidden;
+                border-radius:12px; border:1px solid #E5E7EB; background:#EDF3EA; text-decoration:none;
+                transition: box-shadow .5s cubic-bezier(.22,1,.36,1), transform .5s cubic-bezier(.22,1,.36,1); }
+              .fg-mappanel:hover { transform: translateY(-3px); box-shadow: 0 24px 56px rgba(15,61,20,.14); }
+              .fg-mappanel .fg-map-arr { display:inline-block; transition: transform .4s cubic-bezier(.22,1,.36,1); }
+              .fg-mappanel:hover .fg-map-arr { transform: translateX(4px); }
+              .fg-map-ring { position:absolute; inset:0; border-radius:999px; border:1.5px solid #1A5C1A;
+                animation: fgPing 2.8s cubic-bezier(.16,1,.3,1) infinite; }
+              .fg-map-road { stroke-dasharray: 620; stroke-dashoffset: 620; animation: fgRoad 2.2s cubic-bezier(.22,1,.36,1) .3s forwards; }
+              @media (prefers-reduced-motion: reduce) {
+                .fg-map-ring { animation: none; opacity: 0; }
+                .fg-map-road { stroke-dashoffset: 0; animation: none; }
+                .fg-map-tag  { animation: none !important; }
+              }
+            `}</style>
+            <a
+              className="fg-mappanel"
+              href="https://www.google.com/maps/search/?api=1&query=Chauss%C3%A9e+de+Waterloo+198-200%2C+1640+Rhode-Saint-Gen%C3%A8se%2C+Belgique"
+              target="_blank" rel="noreferrer"
+              aria-label={t("Ouvrir l'itinéraire vers notre siège social", 'Open directions to our head office')}
+            >
+              {/* cartographic grid */}
+              <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(0deg, transparent 0 39px, rgba(26,92,26,.07) 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, rgba(26,92,26,.07) 39px 40px)' }} />
+              {/* roads + forest */}
+              <svg viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} aria-hidden="true">
+                <defs>
+                  <path id="fg-waterloo" d="M -20 262 C 90 214, 175 168, 248 126 S 396 38, 450 10" />
+                </defs>
+                {/* Forêt de Soignes */}
+                <path d="M 322 310 C 306 224, 344 168, 430 148 L 450 320 Z" fill="rgba(26,92,26,.10)" />
+                <text x="358" y="242" fontFamily="'JetBrains Mono', monospace" fontSize="7.5" letterSpacing="1.5" fill="rgba(26,92,26,.42)" transform="rotate(-12 358 242)">FORÊT DE SOIGNES</text>
+                {/* secondary streets */}
+                <path d="M 40 -10 C 78 90, 60 190, 118 310" fill="none" stroke="#fff" strokeWidth="5" opacity=".8" />
+                <path d="M -10 96 C 120 118, 250 96, 430 148" fill="none" stroke="#fff" strokeWidth="5" opacity=".8" />
+                {/* Chaussée de Waterloo — casing, animated centreline, label on the curve */}
+                <use href="#fg-waterloo" fill="none" stroke="#fff" strokeWidth="13" />
+                <use href="#fg-waterloo" className="fg-map-road" fill="none" stroke="rgba(26,92,26,.38)" strokeWidth="1.6" strokeDasharray="7 6" />
+                <text fontFamily="'JetBrains Mono', monospace" fontSize="8" letterSpacing="2.5" fill="rgba(26,92,26,.6)">
+                  <textPath href="#fg-waterloo" startOffset="9%">CHAUSSÉE DE WATERLOO</textPath>
+                </text>
+              </svg>
+              {/* coordinates chip */}
+              <span className="fg-mono" style={{ position: 'absolute', top: 12, right: 14, fontSize: 9, letterSpacing: '.14em', color: 'rgba(26,92,26,.55)' }}>
+                50.75° N · 4.36° E
+              </span>
+              <span className="fg-mono" style={{ position: 'absolute', top: 12, left: 14, fontSize: 9, letterSpacing: '.14em', color: 'rgba(26,92,26,.55)' }}>
+                N ↑
+              </span>
+              {/* pin + radar pulse, on the chaussée */}
+              <div style={{ position: 'absolute', left: '59%', top: '42%', width: 64, height: 64, transform: 'translate(-50%,-50%)' }}>
+                <div className="fg-map-ring" />
+                <div className="fg-map-ring" style={{ animationDelay: '.95s' }} />
+                <div className="fg-map-ring" style={{ animationDelay: '1.9s' }} />
+                <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', width: 14, height: 14, borderRadius: 999, background: '#1A5C1A', border: '2.5px solid #fff', boxShadow: '0 4px 12px rgba(15,61,20,.35)' }} />
+                <span className="fg-mono fg-map-tag" style={{ position: 'absolute', left: '50%', bottom: 'calc(100% - 8px)', transform: 'translateX(-50%)', animation: 'fgHover 3.4s ease-in-out infinite', background: '#0F3D14', color: '#fff', fontSize: 8.5, letterSpacing: '.16em', padding: '5px 9px', borderRadius: 999, whiteSpace: 'nowrap' }}>
+                  FAGOU SRL
+                </span>
               </div>
-            </div>
+              {/* address plaque */}
+              <div style={{ position: 'absolute', left: 12, right: 12, bottom: 12, background: 'rgba(255,255,255,.94)', backdropFilter: 'blur(4px)', border: '1px solid #E5E7EB', borderRadius: 10, padding: '13px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                <div>
+                  <div className="fg-mono" style={{ fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: '#1A5C1A', marginBottom: 5 }}>
+                    ↗ {t('Siège social', 'Head office')}
+                  </div>
+                  <div style={{ fontSize: 13.5, lineHeight: 1.45, color: '#1A1A1A' }}>
+                    Chaussée de Waterloo 198-200<br />1640 Rhode-Saint-Genèse · Belgique
+                  </div>
+                </div>
+                <span className="fg-mono" style={{ fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: '#1A5C1A', whiteSpace: 'nowrap' }}>
+                  {t('Itinéraire', 'Directions')} <span className="fg-map-arr">→</span>
+                </span>
+              </div>
+            </a>
 
             <div style={{ borderTop: '1px solid #E5E7EB' }}>
               {sidebarRows.map(([k, v]) => (
