@@ -22,7 +22,7 @@ export default function News() {
   }, [allArticles, selectedCategory])
 
   return (
-    <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
+    <div style={{ position: 'relative', backgroundColor: 'var(--color-bg)' }}>
       <Nav />
 
       {/* Hero */}

@@ -55,7 +55,7 @@ export default function About() {
   const px = isMobile ? 20 : 64
 
   return (
-    <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
+    <div style={{ position: 'relative', backgroundColor: 'var(--color-bg)' }}>
       <Nav />
 
       {/* ── HERO ── */}
@@ -75,7 +75,7 @@ export default function About() {
       </section>
 
       {/* ── MISSION ── */}
-      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, background: '#fff', borderBottom: '1px solid #E5E7EB' }}>
+      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, background: 'transparent', borderBottom: '1px solid #E5E7EB' }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.4fr', gap: isMobile ? 32 : 64, alignItems: 'start' }}>
           <div>
             <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Mission', 'Mission')}</div>
@@ -168,7 +168,7 @@ export default function About() {
       </section>
 
       {/* ── PRODUITS ── */}
-      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, background: '#fff', borderBottom: '1px solid #E5E7EB' }}>
+      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, background: 'transparent', borderBottom: '1px solid #E5E7EB' }}>
         <div style={{ marginBottom: 56 }}>
           <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Nos Produits', 'Our Products')}</div>
           <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 5vw, 72px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
@@ -239,7 +239,7 @@ export default function About() {
       </section>
 
       {/* ── MANIFESTO 2×2 ── */}
-      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, background: '#fff', borderBottom: '1px solid #E5E7EB' }}>
+      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, background: 'transparent', borderBottom: '1px solid #E5E7EB' }}>
         <div style={{ marginBottom: 56 }}>
           <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 5vw, 72px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
             {t('Quatre engagements,', 'Four commitments,')}{' '}
@@ -299,7 +299,7 @@ export default function About() {
       </section>
 
       {/* ── ENGAGEMENTS ── */}
-      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, background: '#fff', borderBottom: '1px solid #E5E7EB' }}>
+      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, background: 'transparent', borderBottom: '1px solid #E5E7EB' }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.3fr', gap: isMobile ? 40 : 64, alignItems: 'start' }}>
           <div>
             <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Nos engagements', 'Our commitments')}</div>

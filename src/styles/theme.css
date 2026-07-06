@@ -6,8 +6,9 @@
   --color-primary-light: #F2F7F2;
   --color-secondary: #2E8B2E;
   --color-accent: #C0392B;
-  --color-bg: #FAFAF8;
-  --color-bg-alt: #F5F5F0;
+  --bg: #EEF2E8;            /* soft warm sage-green page wash */
+  --color-bg: #EEF2E8;
+  --color-bg-alt: #E6ECDD;
   --color-text: #1A1A1A;
   --color-text-muted: #6B7280;
   --color-gray: #6B7280;

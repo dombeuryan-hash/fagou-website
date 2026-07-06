@@ -109,7 +109,7 @@ export default function Contact() {
   const px = isMobile ? 20 : 64
 
   return (
-    <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
+    <div style={{ position: 'relative', backgroundColor: 'var(--color-bg)' }}>
       <Nav />
 
       {/* Sub-hero */}

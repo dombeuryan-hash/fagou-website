@@ -6,6 +6,7 @@ import { LANGUAGE_STORAGE_KEY } from '../constants'
 interface LanguageContextValue {
   language: Language
   toggleLanguage: () => void
+  setLanguage: (lang: Language) => void
   t: (fr: string, en: string) => string
 }
 
@@ -28,13 +29,18 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
+  const setLanguageDirect = useCallback((lang: Language) => {
+    setLanguage(lang)
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, lang)
+  }, [])
+
   const t = useCallback(
     (fr: string, en: string): string => (language === 'fr' ? fr : en),
     [language]
   )
 
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t }}>
+    <LanguageContext.Provider value={{ language, toggleLanguage, setLanguage: setLanguageDirect, t }}>
       {children}
     </LanguageContext.Provider>
   )

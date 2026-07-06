@@ -106,7 +106,7 @@ export default function ColdStorage() {
   const px = isMobile ? 20 : 64
 
   return (
-    <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
+    <div style={{ position: 'relative', backgroundColor: 'var(--color-bg)' }}>
       <Nav />
 
       {/* ── Hero ── */}
@@ -231,7 +231,7 @@ export default function ColdStorage() {
       </section>
 
       {/* ── Fiche technique ── */}
-      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, borderBottom: '1px solid #E5E7EB', backgroundColor: '#fff' }}>
+      <section style={{ padding: `${isMobile ? 56 : 120}px ${px}px`, borderBottom: '1px solid #E5E7EB', backgroundColor: 'transparent' }}>
         <div style={{ marginBottom: isMobile ? 40 : 64 }}>
           <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Fiche technique', 'Technical specs')}</div>
           <h2 className="fg-fr" style={{ fontSize: 'clamp(32px, 4vw, 64px)', margin: 0, fontWeight: 400, letterSpacing: '-0.035em', lineHeight: 0.96 }}>
@@ -284,7 +284,7 @@ export default function ColdStorage() {
 
           <div>
             <div className="fg-eyebrow" style={{ marginBottom: 24 }}>↗ {t('Opérateur', 'Operator')}</div>
-            <div style={{ border: '1px solid #E5E7EB', borderRadius: 10, padding: '28px 32px', background: '#FAFAF8', marginBottom: 32 }}>
+            <div style={{ border: '1px solid #E5E7EB', borderRadius: 10, padding: '28px 32px', background: '#fff', marginBottom: 32 }}>
               <div className="fg-fr" style={{ fontSize: 28, fontWeight: 400, letterSpacing: '-0.02em', color: '#1A1A1A', marginBottom: 10 }}>LCC</div>
               <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.65, margin: 0 }}>
                 {t(

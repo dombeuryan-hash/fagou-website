@@ -269,7 +269,7 @@ export const CONTACT = {
   addressLines: ['Chaussée de Waterloo 198-200', '1640 Rhode-Saint-Genèse', 'Belgique'],
   mobile: ['+32 490 25 53 52'],
   fixed: '+32 490 25 53 52',
-  emails: ['trading@fagou.be', 'commercial@fagou.be'],
+  emails: ['info@fagou.be'],
   website: 'www.fagou.be',
   hoursFr: 'Lun – Ven · 08h30 – 17h30 (CET)',
   hoursEn: 'Mon – Fri · 08:30 – 17:30 (CET)',

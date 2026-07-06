@@ -113,8 +113,8 @@ export function Footer() {
           <a href={`tel:${COMPANY_PHONE.replace(/\s/g, '')}`} className="fg-footer-contact-link">
             {COMPANY_PHONE}
           </a>
-          <a href="mailto:trading@fagou.be" className="fg-footer-contact-link">
-            trading@fagou.be
+          <a href="mailto:info@fagou.be" className="fg-footer-contact-link">
+            info@fagou.be
           </a>
           {!isMobile && (
             <span className="fg-mono" style={{ fontSize: 10, color: 'rgba(242,247,242,0.25)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>

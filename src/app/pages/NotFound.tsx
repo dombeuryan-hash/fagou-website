@@ -10,7 +10,7 @@ export default function NotFound() {
   const px = isMobile ? 20 : 64
 
   return (
-    <div style={{ position: 'relative', backgroundColor: '#FAFAF8', minHeight: '100vh' }}>
+    <div style={{ position: 'relative', backgroundColor: 'var(--color-bg)', minHeight: '100vh' }}>
       <Nav />
 
       <section style={{ padding: `${isMobile ? 140 : 240}px ${px}px ${isMobile ? 80 : 160}px` }}>

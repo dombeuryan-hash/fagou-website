@@ -34,7 +34,7 @@ export default function Brands() {
   }, [])
 
   return (
-    <div style={{ backgroundColor: '#FAFAF8', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: 'var(--color-bg)', minHeight: '100vh' }}>
       <Nav dark />
 
       {/* Hero */}

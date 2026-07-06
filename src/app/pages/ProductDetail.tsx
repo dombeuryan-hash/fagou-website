@@ -56,7 +56,7 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
-      <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
+      <div style={{ position: 'relative', backgroundColor: 'var(--color-bg)' }}>
         <Nav />
         <section style={{ padding: '220px 64px 120px', textAlign: 'center' }}>
           <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#6B7280' }}>Chargement…</p>
@@ -67,7 +67,7 @@ export default function ProductDetail() {
 
   if (!product || !dept) {
     return (
-      <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
+      <div style={{ position: 'relative', backgroundColor: 'var(--color-bg)' }}>
         <Nav />
         <section style={{ padding: '220px 64px 120px', textAlign: 'center' }}>
           <div className="fg-eyebrow" style={{ marginBottom: 24 }}>↗ {t('Produit introuvable', 'Product not found')}</div>
@@ -97,7 +97,7 @@ export default function ProductDetail() {
   const related = dept.products.filter((p: { code: string }) => p.code !== product.code).slice(0, 3)
 
   return (
-    <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
+    <div style={{ position: 'relative', backgroundColor: 'var(--color-bg)' }}>
       <Nav />
 
       {/* Breadcrumb */}

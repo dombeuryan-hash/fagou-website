@@ -42,7 +42,7 @@ export default function Suppliers() {
   ]
 
   return (
-    <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
+    <div style={{ position: 'relative', backgroundColor: 'var(--color-bg)' }}>
       <Nav />
 
       {/* Hero */}
@@ -63,7 +63,7 @@ export default function Suppliers() {
       </section>
 
       {/* Advantages */}
-      <section style={{ padding: `${isMobile ? 56 : 96}px ${px}px`, background: '#fff', borderBottom: '1px solid #E5E7EB' }}>
+      <section style={{ padding: `${isMobile ? 56 : 96}px ${px}px`, background: 'transparent', borderBottom: '1px solid #E5E7EB' }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 0, borderTop: '1px solid #E5E7EB' }}>
           {advantages.map((a, i) => (
             <div

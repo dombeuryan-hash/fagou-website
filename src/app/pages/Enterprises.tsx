@@ -11,7 +11,7 @@ export default function Enterprises() {
   const px = isMobile ? 20 : 64
 
   return (
-    <div style={{ position: 'relative', backgroundColor: '#FAFAF8' }}>
+    <div style={{ position: 'relative', backgroundColor: 'var(--color-bg)' }}>
       <Nav />
 
       {/* Hero */}

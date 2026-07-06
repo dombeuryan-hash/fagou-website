@@ -185,7 +185,7 @@ export default function Home() {
   ]
 
   return (
-    <div style={{ position: 'relative', backgroundColor: '#FAFAF8', overflowX: 'hidden' }}>
+    <div style={{ position: 'relative', backgroundColor: 'var(--color-bg)', overflowX: 'hidden' }}>
       <Nav dark />
 
       {/* ── HERO ── */}
@@ -397,7 +397,7 @@ export default function Home() {
       </section>
 
       {/* ── BRANDS TEASER ── */}
-      <section ref={refBrands} className="sr" style={{ padding: `${isMobile ? 56 : 96}px ${px}px`, background: '#FAFAF8', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
+      <section ref={refBrands} className="sr" style={{ padding: `${isMobile ? 56 : 96}px ${px}px`, background: 'transparent', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 32 : 80, alignItems: 'center' }}>
           <div>
             <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Marques distribuées', 'Distributed brands')}</div>
@@ -454,7 +454,7 @@ export default function Home() {
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section ref={refTestimonials} className="sr" style={{ padding: `${isMobile ? 64 : 112}px ${px}px`, background: '#fff', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
+      <section ref={refTestimonials} className="sr" style={{ padding: `${isMobile ? 64 : 112}px ${px}px`, background: 'transparent', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 16 : 48, alignItems: 'end', marginBottom: isMobile ? 36 : 56 }}>
           <div>
             <div className="fg-eyebrow" style={{ marginBottom: 18 }}>↗ {t('Ils nous font confiance', 'They trust us')}</div>
