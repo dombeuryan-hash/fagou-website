@@ -1,7 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!
-const TO_EMAIL       = 'trading@fagou.be'
+const TO_EMAILS      = ['trading@fagou.be', 'info@fagou.be']
 const FROM_EMAIL     = 'noreply@mail.fagou.be'
 
 async function sendEmail(payload: {
@@ -107,13 +107,13 @@ serve(async (req) => {
           : 'Votre message a bien été reçu. Notre équipe vous répondra dans un délai de <strong>48 heures ouvrables</strong>.'}
       </p>
       <p style="font-family:sans-serif;font-size:15px;color:#374151;line-height:1.7;margin:0 0 28px;">
-        Pour toute question urgente, vous pouvez nous contacter directement à <a href="mailto:trading@fagou.be" style="color:#1A5C1A;font-weight:600;">trading@fagou.be</a>.
+        Pour toute question urgente, vous pouvez nous contacter directement à <a href="mailto:info@fagou.be" style="color:#1A5C1A;font-weight:600;">info@fagou.be</a>.
       </p>
       <div style="background:#F0F7F0;border-left:3px solid #1A5C1A;padding:16px 20px;border-radius:0 6px 6px 0;">
         <p style="margin:0;font-family:sans-serif;font-size:13px;color:#374151;line-height:1.6;">
           <strong>FAGOU SRL</strong><br>
-          Chaussée d'Alsemberg 842, 1180 Uccle, Belgique<br>
-          <a href="mailto:trading@fagou.be" style="color:#1A5C1A;">trading@fagou.be</a>
+          Chaussée de Waterloo 198-200, 1640 Rhode-Saint-Genèse, Belgique<br>
+          <a href="mailto:info@fagou.be" style="color:#1A5C1A;">info@fagou.be</a>
         </p>
       </div>
     </div>
@@ -130,7 +130,7 @@ serve(async (req) => {
     await Promise.all([
       sendEmail({
         from:     `FAGOU SRL <${FROM_EMAIL}>`,
-        to:       [TO_EMAIL],
+        to:       TO_EMAILS,
         reply_to: record.email,
         subject:  isQuote
           ? `📋 Devis — ${name} (${record.country ?? '?'})`
