@@ -329,20 +329,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── TEAM PLACEHOLDER ── */}
-      <div style={{ width: '100%', aspectRatio: isMobile ? '4 / 3' : '16 / 7', background: 'linear-gradient(135deg, #EEF2EE 0%, #E8EDE8 100%)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(135deg, transparent 0 7px, rgba(15,61,20,0.06) 7px 8px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(26,92,26,0.1)', border: '1px solid rgba(26,92,26,0.15)', margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span className="fg-mono" style={{ fontSize: 14, color: '#1A5C1A', fontWeight: 500 }}>F</span>
-            </div>
-            <span className="fg-mono" style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(15,61,20,0.45)', fontWeight: 500 }}>
-              {t('équipe fagou · bureau bruxelles', 'fagou team · brussels office')}
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* ── CTA ── */}
       <section style={{ background: '#0F3D14', color: '#fff', padding: `${isMobile ? 72 : 120}px ${px}px`, position: 'relative', overflow: 'hidden' }}>
         <div className="fg-float-slow" style={{ position: 'absolute', top: '-25%', right: '-8%', width: 350, height: 350, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)', pointerEvents: 'none' }} />
