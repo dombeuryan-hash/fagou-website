@@ -201,12 +201,12 @@
 .at-nav-in  { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .at-brand   { display: flex; align-items: center; gap: 14px; text-decoration: none; }
 .at-brand-logo {
-  height: 44px; width: auto; flex: none; border-radius: 8px;
+  height: 54px; width: auto; flex: none; border-radius: 8px;
   transition: height .5s var(--ease-out);
 }
 /* on the sage nav, multiply blends the JPG's white box into the background */
 .at-nav .at-brand-logo { mix-blend-mode: multiply; }
-.at-nav.scrolled .at-brand-logo { height: 38px; }
+.at-nav.scrolled .at-brand-logo { height: 46px; }
 .at-brand-tag {
   font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .16em;
   text-transform: uppercase; color: var(--ink-soft); padding-left: 14px; margin-left: 2px;
@@ -702,7 +702,7 @@
   display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
   gap: 40px; padding-block: clamp(56px, 7vw, 92px);
 }
-.at-footer .at-brand-logo { height: 48px; }
+.at-footer .at-brand-logo { height: 58px; }
 .footer-brand .mono {
   color: rgba(255,255,255,.5); margin-top: 18px; display: block;
   max-width: 30ch; line-height: 1.7; letter-spacing: .06em;

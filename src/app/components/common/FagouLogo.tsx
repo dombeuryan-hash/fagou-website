@@ -3,15 +3,21 @@ interface FagouLogoProps {
   dark?: boolean
 }
 
-// viewBox 600×200 → 3:1 ratio. white rounded-card background is baked into the SVG.
-export function FagouLogo({ size = 40 }: FagouLogoProps) {
+// Official Fagou logo (JPG, ~2.6:1 ratio, white background baked in).
+// On light backgrounds `multiply` melts the white box into the page;
+// on dark backgrounds (dark=true) it stays a white rounded plate.
+export function FagouLogo({ size = 40, dark = false }: FagouLogoProps) {
   return (
     <img
-      src="/assets/Fagou%20logo.svg"
+      src="/assets/fagou-logo.jpg"
       alt="Fagou"
-      width={size * 3}
-      height={size}
-      style={{ display: 'block' }}
+      height={Math.round(size * 1.25)}
+      style={{
+        display: 'block',
+        width: 'auto',
+        borderRadius: 6,
+        mixBlendMode: dark ? 'normal' : 'multiply',
+      }}
       draggable={false}
     />
   )
