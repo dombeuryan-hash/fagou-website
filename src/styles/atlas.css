@@ -201,9 +201,11 @@
 .at-nav-in  { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .at-brand   { display: flex; align-items: center; gap: 14px; text-decoration: none; }
 .at-brand-logo {
-  height: 44px; width: auto; flex: none;
+  height: 44px; width: auto; flex: none; border-radius: 8px;
   transition: height .5s var(--ease-out);
 }
+/* on the sage nav, multiply blends the JPG's white box into the background */
+.at-nav .at-brand-logo { mix-blend-mode: multiply; }
 .at-nav.scrolled .at-brand-logo { height: 38px; }
 .at-brand-tag {
   font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .16em;

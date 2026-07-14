@@ -246,7 +246,7 @@ export default function HomeAtlas() {
         <div className="wrap at-nav-in">
           {/* Desktop */}
           <a href="#top" className="at-brand at-desktop-only" aria-label="Fagou home">
-            <img className="at-brand-logo" src="/assets/Fagou logo.svg" alt="Fagou" />
+            <img className="at-brand-logo" src="/assets/fagou-logo.jpg" alt="Fagou" />
             <span className="at-brand-tag">{t('Belgique · Afrique','Belgium · Africa')}</span>
           </a>
           <nav className="at-nav-links at-desktop-only" aria-label="Primary">
@@ -268,7 +268,7 @@ export default function HomeAtlas() {
           {/* Mobile */}
           <div className="at-nav-mobile at-mobile-only">
             <a href="#top" className="at-brand" aria-label="Fagou home">
-              <img className="at-brand-logo" src="/assets/Fagou logo.svg" alt="Fagou" />
+              <img className="at-brand-logo" src="/assets/fagou-logo.jpg" alt="Fagou" />
             </a>
             <button
               className={`at-hamb ${drawerOpen ? 'open' : ''}`}
@@ -671,7 +671,7 @@ export default function HomeAtlas() {
         <div className="wrap footer-top">
           <div className="footer-brand">
             <a href="#top" className="at-brand" aria-label="Fagou home">
-              <img className="at-brand-logo" src="/assets/Fagou logo.svg" alt="Fagou" />
+              <img className="at-brand-logo" src="/assets/fagou-logo.jpg" alt="Fagou" />
             </a>
             <span className="mono">
               {t(
